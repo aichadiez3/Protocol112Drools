@@ -1,4 +1,4 @@
-module Protocol112
+module Protocol112Drools
 {
 	requires javafx.controls;
 	requires javafx.fxml;
