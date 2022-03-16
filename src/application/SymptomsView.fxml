@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="menuPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="601.0" prefWidth="810.0" styleClass="pane-layout" stylesheets="@dark-theme.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SymptomsController">
+   <children>
+      <ListView fx:id="symptomsList" layoutX="55.0" layoutY="174.0" prefHeight="381.0" prefWidth="299.0" stylesheets="@dark-theme.css" />
+      <Label fx:id="textLabel" layoutX="54.0" layoutY="138.0" prefHeight="27.0" prefWidth="299.0" styleClass="main-text" wrapText="true" />
+      <Label layoutX="83.0" layoutY="39.0" prefHeight="27.0" prefWidth="128.0" style="-fx-text-fill: -fx-blue;" text="112Protocol" textFill="#1b8ecc">
+         <font>
+            <Font name="Copperplate Gothic Bold" size="16.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="unselectArrow" fitHeight="63.0" fitWidth="66.0" layoutX="380.0" layoutY="325.0" preserveRatio="true">
+         <image>
+            <Image url="@icons/noun-left-arrow-4633575.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="selectArrow" fitHeight="63.0" fitWidth="66.0" layoutX="380.0" layoutY="275.0" preserveRatio="true" rotate="180.0">
+         <image>
+            <Image url="@icons/noun-left-arrow-4633575.png" />
+         </image>
+      </ImageView>
+      <ListView fx:id="selectedList" layoutX="476.0" layoutY="174.0" prefHeight="310.0" prefWidth="281.0" stylesheets="@dark-theme.css" />
+      <ImageView fitHeight="87.0" fitWidth="89.0" layoutX="11.0" layoutY="9.0" preserveRatio="true">
+         <image>
+            <Image url="@icons/tesst.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="476.0" layoutY="138.0" styleClass="main-text" text="Selected symptoms" />
+      <Group layoutX="718.0" layoutY="9.0">
+         <children>
+            <ImageView fitHeight="25.0" fitWidth="28.0" layoutX="27.0" onMouseClicked="#minimize_window" preserveRatio="true">
+               <image>
+                  <Image url="@icons/minimize.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="53.0" onMouseClicked="#close_window" preserveRatio="true">
+               <image>
+                  <Image url="@icons/exit.jpg" />
+               </image>
+            </ImageView>
+         </children>
+      </Group>
+      <Group fx:id="saveButton" layoutX="655.0" layoutY="507.0">
+         <children>
+            <ImageView fitHeight="58.0" fitWidth="57.0" layoutX="24.0">
+               <image>
+                  <Image url="@icons/noun-submit-125166.png" />
+               </image>
+            </ImageView>
+            <Label layoutY="51.0" styleClass="text-style" text="Save and submit">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+         </children>
+      </Group>
+      <ComboBox fx:id="specialityField" layoutX="312.0" layoutY="56.0" onAction="#update_label" onMouseClicked="#refresh_list" prefHeight="32.0" prefWidth="283.0" promptText="Speciality of the emergency" styleClass="text-field" stylesheets="@dark-theme.css" />
+   </children>
+</Pane>

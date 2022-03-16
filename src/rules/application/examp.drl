@@ -1,0 +1,76 @@
+//created on: 14 mar. 2022
+
+//list any import classes here.
+import pojos.Emergency;
+import pojos.Location;
+import pojos.Protocol;
+
+
+//declare any global variables here
+
+
+
+
+rule "cardiology_heart_attack"
+	dialect "java"
+	when
+		u : Emergency (getSpecialty().getDisease_list().get(0).getDisease().equals("Heart attack"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(u.getProtocol_list().get(0));
+end;
+
+rule "home"
+
+    dialect "java"
+    when
+        u : Emergency (getLocation().getPlace().equals("Home"))
+    then 
+        u.getLocation().setVehicle(Location.Vehicle.AMBULANCE);
+end
+
+rule "transit"
+
+    dialect "java"
+    when
+        u : Emergency (getLocation().getPlace().equals("Transit"))
+    then 
+        u.getLocation().setVehicle(Location.Vehicle.AMBULANCE);
+end
+
+rule "at work"
+
+    dialect "java"
+    when
+        u : Emergency (getLocation().getPlace().equals("Work place"))
+    then 
+        u.getLocation().setVehicle(Location.Vehicle.AMBULANCE);
+end
+
+rule "mountain"
+
+    dialect "java"
+    when
+        u : Emergency (getLocation().getPlace().equals("Mountain"))
+    then 
+        u.getLocation().setVehicle(Location.Vehicle.HELICOPTER);
+end
+
+rule "at the beach"
+
+    dialect "java"
+    when
+        u : Emergency (getLocation().getPlace().equals("Beach"))
+    then 
+        u.getLocation().setVehicle(Location.Vehicle.BOAT);
+end
+
+/*
+rule "if advice"
+	dialect "java"
+	when
+		u : Emergency (getProtocol().getProtocolType() == Protocol.Type.ADVICE)
+	then
+		u.getLocation().setVehicle(null);
+end
+*/

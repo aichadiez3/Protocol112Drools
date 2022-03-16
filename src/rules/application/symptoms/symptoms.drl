@@ -1,0 +1,677 @@
+
+import pojos.Emergency;
+
+
+							// CARDIOLOGY
+
+rule "cardiology_heart_attack"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Cardiology") && specialty.getDisease_list().get(0).getDisease().equals("Heart attack"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(u.getProtocol_list().get(7));
+end
+
+rule "cardiology_heart_failure_severe"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Cardiology") && specialty.getDisease_list().get(1).getDisease().equals("Heart failure"))
+	then
+		u.setSeverity(3);
+		u.setProtocol(u.getProtocol_list().get(8));
+		
+end
+
+rule "cardiology_heart_failure_severe_light"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Cardiology") && specialty.getDisease_list().get(2).getDisease().equals("Heart failure"))
+	then
+		u.setSeverity(4);
+		u.setProtocol(u.getProtocol_list().get(9));
+		
+end
+
+rule "cardiology_hipertensive_crisis"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Cardiology") && specialty.getDisease_list().get(3).getDisease().equals("Hipertensive crisis"))
+	then
+		u.setSeverity(3);
+		u.setProtocol(u.getProtocol_list().get(10));
+		
+end
+
+rule "cardiology_ictus"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Cardiology") && specialty.getDisease_list().get(4).getDisease().equals("Ictus"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(u.getProtocol_list().get(11));
+		
+end
+
+rule "cardiology_syncope_Ancients"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Cardiology") && specialty.getDisease_list().get(5).getDisease().equals("Syncope") && patient.getAge_range().equals("Ancient"))
+	then
+		u.setSeverity(4);
+		u.setProtocol(u.getProtocol_list().get(12));
+		
+end
+
+
+rule "cardiology_syncope_others"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Cardiology") && specialty.getDisease_list().get(6).getDisease().equals("Syncope"))
+	then
+		u.setSeverity(5);
+		u.setProtocol(u.getProtocol_list().get(13));
+		
+end
+
+
+
+
+							// TOXICOLOGY
+							
+rule "toxycology_food_poisoning_child"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(0).getDisease().equals("Food poisoning"))
+
+	then
+
+		u.setSeverity(1);
+		u.setProtocol(u.getProtocol_list().get(6));
+
+end
+
+rule "toxycology_food_poisoning_young_md"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(1).getDisease().equals("Food poisoning"))
+
+	then
+
+		u.setSeverity(2);
+		u.setProtocol(u.getProtocol_list().get(6));
+
+end
+
+rule "toxycology_food_poisoning_young_nmd"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(2).getDisease().equals("Food poisoning"))
+
+	then
+
+		u.setSeverity(3);
+		u.setProtocol(u.getProtocol_list().get(8));
+
+end
+
+rule "toxycology_food_poisoning_adult_md"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(3).getDisease().equals("Food poisoning"))
+
+	then
+
+		u.setSeverity(3);
+		u.setProtocol(u.getProtocol_list().get(7));
+
+end
+
+rule "toxycology_food_poisoning_adult_nmd"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(4).getDisease().equals("Food poisoning"))
+
+	then
+
+		u.setSeverity(4);
+		u.setProtocol(u.getProtocol_list().get(8));
+
+end
+
+rule "toxycology_food_poisoning_elder_md"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(5).getDisease().equals("Food poisoning"))
+
+	then
+
+		u.setSeverity(3);
+		u.setProtocol(u.getProtocol_list().get(7));
+
+end
+
+rule "toxycology_food_poisoning_elder_nmd"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(6).getDisease().equals("Food poisoning"))
+
+	then
+
+		u.setSeverity(4);
+		u.setProtocol(u.getProtocol_list().get(8));
+
+end
+
+rule "drugs_cronical"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(7).getDisease().equals("Drugs"))
+
+	then
+
+		u.setSeverity(1);
+		u.setProtocol(u.getProtocol_list().get(6));
+
+end
+
+rule "drugs_nocronical"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(8).getDisease().equals("Drugs"))
+
+	then
+
+		u.setSeverity(2);
+		u.setProtocol(u.getProtocol_list().get(6));
+
+end
+
+rule "hangover_child"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(9).getDisease().equals("Hangover"))
+
+	then
+
+		u.setSeverity(1);
+		u.setProtocol(u.getProtocol_list().get(6));
+
+end
+
+rule "hangover_young"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(10).getDisease().equals("Hangover"))
+
+	then
+
+		u.setSeverity(4);
+		u.setProtocol(u.getProtocol_list().get(8));
+
+end
+
+rule "hangover_adult"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(11).getDisease().equals("Allergies for medicamente"))
+
+	then
+		u.setSeverity(5);
+		u.setProtocol(u.getProtocol_list().get(8));
+
+end
+
+rule "hangover_elder"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(12).getDisease().equals("Allergies for medicamente"))
+
+	then
+
+		u.setSeverity(5);
+		u.setProtocol(u.getProtocol_list().get(8));
+
+end
+
+rule "afm_child"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(13).getDisease().equals("Allergies for medicamente"))
+
+	then
+
+		u.setSeverity(1);
+		u.setProtocol(u.getProtocol_list().get(6));
+
+end
+
+rule "afm_young_md_cronical"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(14).getDisease().equals("Allergies for medicamente"))
+
+	then
+
+		u.setSeverity(2);
+		u.setProtocol(u.getProtocol_list().get(6));
+
+end
+
+rule "afm_young_md_nc"
+
+	dialect "java"
+
+	when
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(15).getDisease().equals("Allergies for medicamente"))
+
+	then
+		u.setSeverity(2);
+		u.setProtocol(u.getProtocol_list().get(6));
+
+end
+
+rule "afm_young_nmd_c"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(16).getDisease().equals("Allergies for medicamente"))
+
+	then
+		u.setSeverity(3);
+		u.setProtocol(u.getProtocol_list().get(7));
+
+end
+
+rule "afm_young_nmd_nc"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(17).getDisease().equals("Allergies for medicamente"))
+
+	then
+
+		u.setSeverity(1);
+		u.setProtocol(u.getProtocol_list().get(6));
+
+end
+
+rule "afm_adult_md_cronical"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(18).getDisease().equals("Allergies for medicamente"))
+
+	then
+		u.setSeverity(2);
+		u.setProtocol(u.getProtocol_list().get(6));
+
+end
+
+rule "afm_adult_md_nc"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(19).getDisease().equals("Allergies for medicamente"))
+
+	then
+		u.setSeverity(3);
+		u.setProtocol(u.getProtocol_list().get(6));
+
+end
+
+rule "afm_adult_nmd_c"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(20).getDisease().equals("Allergies for medicamente"))
+
+	then
+		u.setSeverity(3);
+		u.setProtocol(u.getProtocol_list().get(6));
+
+end
+
+rule "afm_adult_nmd_nc"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(21).getDisease().equals("Allergies for medicamente"))
+
+	then
+		u.setSeverity(4);
+		u.setProtocol(u.getProtocol_list().get(8));
+
+end
+
+rule "afm_elder_md_cronical"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(22).getDisease().equals("Allergies for medicamente"))
+
+	then
+		u.setSeverity(1);
+		u.setProtocol(u.getProtocol_list().get(6));
+
+end
+
+rule "afm_elder_md_nc"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(23).getDisease().equals("Allergies for medicamente"))
+
+	then
+
+		u.setSeverity(2);
+		u.setProtocol(u.getProtocol_list().get(6));
+
+end
+
+rule "afm_elder_nmd_c"
+
+	dialect "java"
+
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(24).getDisease().equals("Allergies for medicamente"))
+
+	then
+		u.setSeverity(2);
+		u.setProtocol(u.getProtocol_list().get(6));
+
+end
+
+rule "afm_elder_nmd_nc"
+
+	dialect "java"
+	when
+
+		u : Emergency (specialty.equals("Toxicology") && specialty.getDisease_list().get(25).getDisease().equals("Allergies for medicamente"))
+
+	then
+		u.setSeverity(3);
+		u.setProtocol(u.getProtocol_list().get(7));
+
+end
+			
+							
+
+							// NEUROLOGY
+rule "neurology_stroke"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Neurology") && specialty.getDisease_list().get(0).getDisease().equals("Stroke"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(u.getProtocol_list().get(15));
+		
+end
+
+rule "neurology_epilepsy_child"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Neurology") && specialty.getDisease_list().get(1).getDisease().equals("Epilepsy"))
+	then
+		u.setSeverity(2);
+		u.setProtocol(u.getProtocol_list().get(14));
+		
+end
+
+rule "neurology_epilepsy_adult"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Neurology") && specialty.getDisease_list().get(2).getDisease().equals("Epilepsy"))
+	then
+		u.setSeverity(3);
+		u.setProtocol(u.getProtocol_list().get(14));
+		
+end
+
+rule "neurology_epilepsy_elder"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Neurology") && specialty.getDisease_list().get(2).getDisease().equals("Epilepsy"))
+	then
+		u.setSeverity(2);
+		u.setProtocol(u.getProtocol_list().get(14));
+		
+end
+
+rule "neurology_migraine_child"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Neurology") && specialty.getDisease_list().get(3).getDisease().equals("Migraine"))
+	then
+		u.setSeverity(4);
+		u.setProtocol(u.getProtocol_list().get(13));
+		
+end
+
+rule "neurology_migraine_adult"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Neurology") && specialty.getDisease_list().get(3).getDisease().equals("Migraine"))
+	then
+		u.setSeverity(5);
+		u.setProtocol(u.getProtocol_list().get(13));
+		
+end
+
+rule "neurology_migraine_elder"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Neurology") && specialty.getDisease_list().get(3).getDisease().equals("Migraine"))
+	then
+		u.setSeverity(5);
+		u.setProtocol(u.getProtocol_list().get(13));
+		
+end
+
+rule "neurology_ptsd"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Neurology") && specialty.getDisease_list().get(4).getDisease().equals("Ptsd"))
+	then
+		u.setSeverity(5);
+		u.setProtocol(u.getProtocol_list().get(13));
+		
+end
+
+rule "neurology_meningities"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Neurology") && specialty.getDisease_list().get(3).getDisease().equals("Meningities"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(u.getProtocol_list().get(15));
+		
+end
+
+
+							// TRAUMATOLOGY
+							
+
+							
+							// ONCOLOGY
+							
+rule "oncology_colon_cancer_light"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Oncology") && specialty.getDisease_list().get(0).getDisease().equals("Colon cancer"))
+	then
+		u.setSeverity(4);
+		u.setProtocol(u.getProtocol_list().get(4));
+		
+end
+
+rule "oncology_colon_cancer_severe"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Oncology") &&  specialty.getDisease_list().get(1).getDisease().equals("Colon cancer"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(u.getProtocol_list().get(0));
+end
+
+rule "oncology_prostate_cancer_light"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Oncology") && specialty.getDisease_list().get(2).getDisease().equals("Prostate cancer"))
+	then
+		u.setSeverity(3);
+		u.setProtocol(u.getProtocol_list().get(5));
+end
+
+rule "oncology_prostate_cancer_severe"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Oncology") && specialty.getDisease_list().get(3).getDisease().equals("Prostate cancer"))
+	then
+		u.setSeverity(2);
+		u.setProtocol(u.getProtocol_list().get(0));
+		System.out.println(u);
+		
+end
+
+
+rule "oncology_lung_cancer_light"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Oncology") && specialty.getDisease_list().get(4).getDisease().equals("Lung cancer"))
+	then
+		u.setSeverity(5);
+		u.setProtocol(u.getProtocol_list().get(5));
+end
+
+rule "oncology_lung_cancer_severe"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Oncology") && specialty.getDisease_list().get(5).getDisease().equals("Lung cancer"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(u.getProtocol_list().get(16));
+end
+
+rule "oncology_breast_cancer_light"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Oncology") && specialty.getDisease_list().get(6).getDisease().equals("Breast cancer"))
+	then
+		u.setSeverity(5);
+		u.setProtocol(u.getProtocol_list().get(4));
+end
+
+rule "oncology_breast_cancer_severe"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Oncology") && specialty.getDisease_list().get(7).getDisease().equals("Breast cancer"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(u.getProtocol_list().get(0));
+end
+
+rule "oncology_leukemia_severe"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Oncology") && specialty.getDisease_list().get(8).getDisease().equals("Leukemia"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(u.getProtocol_list().get(3));
+end
+
+rule "oncology_leukemia_light"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Oncology") && specialty.getDisease_list().get(9).getDisease().equals("Leukemia"))
+	then
+		u.setSeverity(4);
+		u.setProtocol(u.getProtocol_list().get(4));
+end
+
+
+							// OTHER
+
+rule "other_unknown_light"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Other") && specialty.getDisease_list().get(0).getDisease().equals("Unknown (not urgent)"))
+	then
+		u.setSeverity(5);
+		u.setProtocol(u.getProtocol_list().get(2));
+end		
+
+rule "other_unknown_severe"
+	dialect "java"
+	when
+		u : Emergency (specialty.equals("Other") && specialty.getDisease_list().get(1).getDisease().equals("Unknown (urgent)"))
+	then
+		u.setSeverity(4);
+		u.setProtocol(u.getProtocol_list().get(0));
+end										
+
+
+
+							

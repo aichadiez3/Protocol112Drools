@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="menuPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="601.0" prefWidth="810.0" styleClass="pane-layout" stylesheets="@dark-theme.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ProtocolController">
+   <children>
+      <Group layoutX="306.0" layoutY="9.0">
+         <children>
+            <Label layoutX="71.0" layoutY="30.0" prefHeight="27.0" prefWidth="128.0" style="-fx-text-fill: -fx-blue;" text="112Protocol" textFill="#1b8ecc">
+               <font>
+                  <Font name="Copperplate Gothic Bold" size="16.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="87.0" fitWidth="89.0" preserveRatio="true">
+               <image>
+                  <Image url="@icons/tesst.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Group>
+      <Group layoutX="718.0" layoutY="9.0">
+         <children>
+            <ImageView fitHeight="25.0" fitWidth="28.0" layoutX="27.0" onMouseClicked="#minimize_window" preserveRatio="true">
+               <image>
+                  <Image url="@icons/minimize.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="53.0" onMouseClicked="#close_window" preserveRatio="true">
+               <image>
+                  <Image url="@icons/exit.jpg" />
+               </image>
+            </ImageView>
+         </children>
+      </Group>
+      <Pane layoutX="10.0" layoutY="95.0" prefHeight="515.0" prefWidth="789.0" styleClass="bubble-pane-layout">
+         <children>
+            <Label layoutX="349.0" layoutY="38.0" prefHeight="54.0" prefWidth="252.0" styleClass="title-text-style" text="Preliminary diagnosis           (to be confirmed at Hospital)" textAlignment="CENTER" wrapText="true" />
+            <Label layoutX="72.0" layoutY="38.0" styleClass="title-text-style" text="Patient" />
+            <Label fx:id="ageLabel" layoutX="175.0" layoutY="110.0" styleClass="text-style" text="Age" />
+            <Line endX="-99.99998474121094" endY="-93.60000610351562" layoutX="254.0" layoutY="134.0" startX="-99.99998474121094" startY="64.79998779296875" />
+            <Label fx:id="genderLabel" layoutX="175.0" layoutY="135.0" styleClass="text-style" text="Gender" />
+            <Label fx:id="diseaseLabel" layoutX="493.0" layoutY="180.0" styleClass="main-text" text="[Disease]" />
+            <Label fx:id="specialityLabel" layoutX="493.0" layoutY="145.0" styleClass="main-text" text="[Speciality]" />
+            <Line endX="-99.99998474121094" endY="-74.60000610351562" layoutX="575.0" layoutY="184.0" startX="-100.0" startY="21.79998779296875" />
+            <Label layoutX="47.0" layoutY="330.0" prefHeight="27.0" prefWidth="150.0" styleClass="title-text-style" text="Protocol display" />
+            <TextArea fx:id="protocolInfo" editable="false" layoutX="220.0" layoutY="289.0" prefHeight="178.0" prefWidth="493.0">
+               <font>
+                  <Font size="15.0" />
+               </font></TextArea>
+            <Line endX="-99.99998474121094" endY="-74.60000610351562" layoutX="320.0" layoutY="364.0" startX="-99.99998474121094" startY="103.0" />
+            <Label fx:id="typeLabel" layoutX="75.0" layoutY="361.0" styleClass="main-text" text="[Type]" />
+            <Label alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="30.0" layoutY="191.0" prefHeight="20.0" prefWidth="111.0" styleClass="text-style" text="Emergency code: " textAlignment="RIGHT" />
+            <Label layoutX="47.0" layoutY="150.0" prefHeight="39.0" prefWidth="99.0" styleClass="text-style" text="Medical drugs:  " />
+            <Label fx:id="nameLabel" layoutX="175.0" layoutY="55.0" styleClass="text-style" text="Name" />
+            <Label fx:id="surnameLabel" layoutX="175.0" layoutY="82.0" styleClass="text-style" text="Surname" />
+            <Label fx:id="drugs" layoutX="175.0" layoutY="162.0" styleClass="text-style" />
+            <Label fx:id="code" layoutX="175.0" layoutY="191.0" styleClass="text-style" />
+         </children>
+      </Pane>
+      <ImageView fitHeight="27.0" fitWidth="25.0" layoutX="716.0" layoutY="9.0" onMouseClicked="#open_new_case" preserveRatio="true">
+         <image>
+            <Image url="@icons/new.jpg" />
+         </image>
+      </ImageView>
+      <Label layoutX="611.0" layoutY="55.0" text="Create new case here" textFill="#46b92c">
+         <font>
+            <Font name="System Bold Italic" size="12.0" />
+         </font>
+      </Label>
+      <Line endX="-99.50006103515625" endY="-11.0" layoutX="828.0" layoutY="46.0" startX="-100.00006103515625" startY="8.0" stroke="#46b92c" />
+   </children>
+</Pane>

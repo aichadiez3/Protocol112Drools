@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchorPane" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.LogInController">
+   <children>
+      <Pane fx:id="menuPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="446.0" prefWidth="656.0" style="-fx-background-color: -fx-radial;" styleClass="pane-layout" stylesheets="@dark-theme.css">
+         <children>
+            <Pane layoutX="44.0" layoutY="107.0" prefHeight="233.0" prefWidth="569.0" styleClass="bubble-pane-layout">
+               <children>
+                  <TextField fx:id="usernameField" layoutX="306.0" layoutY="65.0" promptText="Username" />
+                  <PasswordField fx:id="passwordField" layoutX="306.0" layoutY="114.0" onMouseExited="#check_user_existence" promptText="Password" />
+                  <Label fx:id="signupButton" layoutX="418.0" layoutY="179.0" style="-fx-background-color: white; -fx-text-fill: -fx-blue;" text="Sign up">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="loginButton" layoutX="318.0" layoutY="171.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="82.0" styleClass="login-button" text="Sign in" />
+                  <ImageView fitHeight="170.0" fitWidth="200.0" layoutX="47.0" layoutY="32.0">
+                     <image>
+                        <Image url="@icons/noun-emergency-1299993.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Group fx:id="warning" layoutX="143.0" layoutY="370.0">
+               <children>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff69694c" height="36.0" stroke="#ff1f1fb5" strokeType="INSIDE" width="370.0" />
+                  <Label fx:id="warningLabel" layoutX="43.0" layoutY="8.0" text="ERROR! Username or password doesn't exist" textFill="#ff0000c7">
+                     <font>
+                        <Font name="System Italic" size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Group>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
