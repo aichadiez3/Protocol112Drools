@@ -79,7 +79,7 @@ public class SymptomsController implements Initializable {
 				
 				Integer protocol = 1, severity = 3;
 				Integer loc_id = manager_object.Search_location_id_from_emergency(urgency.getId());
-				Integer speciality = manager_object.Search_speciality_id_by_name(specialityField.getValue().toString());
+				Integer speciality = manager_object.Search_specialty_id_by_name(specialityField.getValue().toString());
 				manager_object.Update_emergency_info("calle palacios", severity, speciality, loc_id, protocol, urgency.getId());
 			
 				ProtocolController.setValues(manager_object, urgency);

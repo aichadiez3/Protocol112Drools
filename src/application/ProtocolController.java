@@ -89,8 +89,8 @@ public class ProtocolController implements Initializable {
 		code.setText(urgency.getCode().toString());
 		
 		
-		Integer spe_id = manager_object.Search_speciality_by_emergency_id(urgency.getId());
-		specialityLabel.setText(manager_object.Search_speciality_by_id(spe_id));
+		Integer spe_id = manager_object.Search_specialty_by_emergency_id(urgency.getId());
+		specialityLabel.setText(manager_object.Search_specialty_by_id(spe_id));
 		
 		// HACER LO MISMO PERO CON DISEASE
 		

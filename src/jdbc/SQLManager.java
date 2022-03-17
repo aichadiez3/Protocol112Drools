@@ -44,7 +44,7 @@ public class SQLManager implements Interface {
 			statement_0.close();
 			
 			Statement statement_1 = this.sqlite_connection.createStatement();
-			String table_1 = " CREATE TABLE speciality " + "(speciality_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+			String table_1 = " CREATE TABLE specialty " + "(specialty_id INTEGER PRIMARY KEY AUTOINCREMENT, "
 			        + " name INTEGER NOT NULL UNIQUE)";
 			statement_1.execute(table_1);
 			statement_1.close();
@@ -57,17 +57,17 @@ public class SQLManager implements Interface {
 			
 			Statement statement_3 = this.sqlite_connection.createStatement();
 			String table_3 = " CREATE TABLE location " + "(location_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-			        + " type TEXT NOT NULL, " + " vehicle ENUM ('ambulance','helicopter','boat') default NULL)";
+			        + " type TEXT NOT NULL, " + " vehicle TEXT default NULL)";
 			statement_3.execute(table_3);
 			statement_3.close();
 			
 			Statement statement_4 = this.sqlite_connection.createStatement();
-			String table_4 = " CREATE TABLE emergency " + "(emergency_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-			        + " code INTEGER NOT NULL UNIQUE, " + " level INTEGER default NULL, " + "register_date TEXT NOT NULL, "
-					+ " direction TEXT default NULL, "
-			        + " location_id INTEGER FOREING KEY REFERENCES location(location_id), "
-			        + " speciality_id INTEGER FOREING KEY REFERENCES speciality(speciality_id) ON DELETE CASCADE, "
+			String table_4 = " CREATE TABLE emergency (emergency_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+					+ " code INTEGER NOT NULL UNIQUE, " + " level INTEGER default NULL, " + "register_date TEXT NOT NULL, "
+					+ " direction TEXT default NULL, " + " location_id INTEGER FOREING KEY REFERENCES location(location_id), "
+					+ " specialty_id INTEGER FOREING KEY REFERENCES specialty(specialty_id) ON DELETE CASCADE, "
 					+ " protocol_id INTEGER FOREING KEY REFERENCES protocol(protocol_id) ON DELETE CASCADE)";
+					
 			statement_4.execute(table_4);
 			statement_4.close();
 			
@@ -88,7 +88,7 @@ public class SQLManager implements Interface {
 			
 			Statement statement_7 = this.sqlite_connection.createStatement();
 			String table_7 = " CREATE TABLE disease " + "(disease_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-			        + " name TEXT NOT NULL," + "speciality_id INTEGER FOREING KEY REFERENCES speciality(speciality_id) ON DELETE CASCADE)";
+			        + " name TEXT NOT NULL," + "specialty_id INTEGER FOREING KEY REFERENCES specialty(specialty_id) ON DELETE CASCADE)";
 			statement_7.execute(table_7);
 			statement_7.close();
 			
@@ -105,30 +105,30 @@ public class SQLManager implements Interface {
 					+ "PRIMARY KEY (disease_id, symptom_id))";
 			statement_9.execute(table_9);
 			statement_9.close();
-			
+		
 			
 			return true;
 			
 		} catch (SQLException tables_error) {
-			tables_error.printStackTrace();
+			//tables_error.printStackTrace();
 			return false;
 		}
 	}
 	
 	public void Insert_default_elements_toDB() {
 		
-		Insert_new_location("Ambulance", "Home");
-		Insert_new_location("Ambulance", "Transit");
-		Insert_new_location("Ambulance", "Workplace");
-		Insert_new_location("Helicopter", "Mountain");
-		Insert_new_location("Boat", "Beach");
+		Insert_new_location("AMBULANCE", "Home");
+		Insert_new_location("AMBULANCE", "Transit");
+		Insert_new_location("AMBULANCE", "Workplace");
+		Insert_new_location("HELICOPTER", "Mountain");
+		Insert_new_location("BOAT", "Beach");
 		
-		Insert_new_speciality("Oncology");
-		Insert_new_speciality("Cardiology");
-		Insert_new_speciality("Toxicology");
-		Insert_new_speciality("Traumatology");
-		Insert_new_speciality("Neurology");
-		Insert_new_speciality("Other");
+		Insert_new_specialty("Oncology");
+		Insert_new_specialty("Cardiology");
+		Insert_new_specialty("Toxicology");
+		Insert_new_specialty("Traumatology");
+		Insert_new_specialty("Neurology");
+		Insert_new_specialty("Other");
 		
 		Insert_new_protocol("Take paracetamol");
 		Insert_new_protocol("Connect to oxygen supply");
@@ -240,28 +240,29 @@ public class SQLManager implements Interface {
 		}
 	}
 	
-	public Integer Insert_new_speciality(String name) {
-		Integer speciality_id;
-		String table = "INSERT INTO speciality (name) " + "VALUES (?)";
+	
+	public Integer Insert_new_specialty(String name) {
+		Integer specialty_id;
+		String table = "INSERT INTO specialty (name) " + "VALUES (?)";
 		try {
 			PreparedStatement template = this.sqlite_connection.prepareStatement(table);
 			template.setString(1, name);
 			template.executeUpdate();
-			String SQL_code = "SELECT last_insert_rowid() AS speciality_id";
+			String SQL_code = "SELECT last_insert_rowid() AS specialty_id";
 			template = this.sqlite_connection.prepareStatement(SQL_code);
 			ResultSet result_set = template.executeQuery();
-			speciality_id = result_set.getInt("speciality_id");
+			specialty_id = result_set.getInt("specialty_id");
 			template.close();
-			return speciality_id;
-		} catch (SQLException new_speciality_error) {
-			new_speciality_error.printStackTrace();
+			return specialty_id;
+		} catch (SQLException new_specialty_error) {
+			new_specialty_error.printStackTrace();
 			return -1;
 		}
 	}
 	
 	public Integer Insert_new_disease(String name, Integer spe_id) {
 		Integer disease_id;
-		String table = "INSERT INTO disease (name, speciality_id) " + "VALUES (?,?)";
+		String table = "INSERT INTO disease (name, specialty_id) " + "VALUES (?,?)";
 		try {
 			PreparedStatement template = this.sqlite_connection.prepareStatement(table);
 			template.setString(1, name);
@@ -407,7 +408,7 @@ public class SQLManager implements Interface {
 	 public Location Search_vehicle_by_place_type(String place) {
 		 
 			try {
-				Location.Vehicle vehicle=null;
+				String vehicle="";
 				Integer loc_id=-1;
 				
 				String SQL_code = "SELECT * FROM location WHERE type LIKE ?";
@@ -415,8 +416,7 @@ public class SQLManager implements Interface {
 				template.setString(1, place);
 				ResultSet result_set = template.executeQuery();
 				while(result_set.next()) {
-					vehicle = (Location.Vehicle) result_set.getObject("vehicle");
-					//vehicle = result_set.getStringObject("vehicle");
+					vehicle = result_set.getString("vehicle");
 					loc_id = result_set.getInt("location_id");
 				}
 				Location loc = new Location(loc_id, place, vehicle);
@@ -470,30 +470,30 @@ public class SQLManager implements Interface {
 			
 		}
 	 
-	 public Integer Search_speciality_id_by_name(String name) {
+	 public Integer Search_specialty_id_by_name(String name) {
 	    	Integer spe_id=-1;
 			try {
-				String SQL_code = "SELECT speciality_id FROM speciality WHERE name LIKE ?";
+				String SQL_code = "SELECT specialty_id FROM specialty WHERE name LIKE ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setString(1, name);
 				ResultSet result_set = template.executeQuery();
 				
 			    while(result_set.next()) {
-			    	spe_id = result_set.getInt("speciality_id");
+			    	spe_id = result_set.getInt("specialty_id");
 			    }
 				template.close();
 				return spe_id;
-			} catch (SQLException search_speciality_error) {
-				search_speciality_error.printStackTrace();
+			} catch (SQLException search_specialty_error) {
+				search_specialty_error.printStackTrace();
 				return spe_id;
 			}
 			
 		}
 	 
-	 public String Search_speciality_by_id(Integer id) {
+	 public String Search_specialty_by_id(Integer id) {
 			try {
 				String name="";
-				String SQL_code = "SELECT name FROM speciality WHERE speciality_id LIKE ?";
+				String SQL_code = "SELECT name FROM specialty WHERE specialty_id LIKE ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, id);
 				ResultSet result_set = template.executeQuery();
@@ -504,24 +504,24 @@ public class SQLManager implements Interface {
 				return name;
 				
 				
-			} catch (SQLException search_specialityName_error) {
-				search_specialityName_error.printStackTrace();
+			} catch (SQLException search_specialtyName_error) {
+				search_specialtyName_error.printStackTrace();
 				return null;
 			}
 			
 		}
 	 
 	 
-	 public Integer Search_speciality_by_emergency_id(Integer id) {
+	 public Integer Search_specialty_by_emergency_id(Integer id) {
 		 Integer spe_id=-1;
 			try {
 				
-				String SQL_code = "SELECT speciality_id FROM emergency WHERE emergency_id LIKE ?";
+				String SQL_code = "SELECT specialty_id FROM emergency WHERE emergency_id LIKE ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, id);
 				ResultSet result_set = template.executeQuery();
 				while (result_set.next()) {
-					spe_id = result_set.getInt("speciality_id");
+					spe_id = result_set.getInt("specialty_id");
 				}
 				template.close();
 				return spe_id;
@@ -598,13 +598,13 @@ public class SQLManager implements Interface {
 			}
 		}
 	 
-	 public boolean Update_emergency_info(String direction, Integer severity, Integer speciality_id, Integer location_id, Integer protocol_id, Integer emergency_id) {
+	 public boolean Update_emergency_info(String direction, Integer severity, Integer specialty_id, Integer location_id, Integer protocol_id, Integer emergency_id) {
 		 try {
-				String SQL_code = "UPDATE emergency SET direction = ?, level = ?, speciality_id = ?, location_id = ?, protocol_id = ? WHERE emergency_id LIKE ?";
+				String SQL_code = "UPDATE emergency SET direction = ?, level = ?, specialty_id = ?, location_id = ?, protocol_id = ? WHERE emergency_id LIKE ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setString(1, direction);
 				template.setInt(2, severity);
-				template.setInt(3, speciality_id);
+				template.setInt(3, specialty_id);
 				template.setInt(4, location_id);
 				template.setInt(5, protocol_id);
 				template.setInt(6, emergency_id);
@@ -662,7 +662,7 @@ public class SQLManager implements Interface {
 		List<String> list = new LinkedList<String>();
 		try {
 			Statement statement = this.sqlite_connection.createStatement();
-			String SQL_code = "SELECT name FROM speciality";
+			String SQL_code = "SELECT name FROM specialty";
 			ResultSet rs = statement.executeQuery(SQL_code);
 			while(rs.next()) {
 				String name = rs.getString("name");
@@ -695,11 +695,11 @@ public class SQLManager implements Interface {
 	
 	//------------> ESTE ESTA MAL. CORREGIR MAS ADELANTE
 	
-	public List<String> List_all_symptoms_by_speciality(Integer speciality_id){
+	public List<String> List_all_symptoms_by_specialty(Integer specialty_id){
 		List<String> list = new LinkedList<String>();
 		try {
 			Statement statement = this.sqlite_connection.createStatement();
-			String SQL_code = "SELECT symptom_id FROM speciality_symptom WHERE speciality_id LIKE ?";
+			String SQL_code = "SELECT symptom_id FROM specialty_symptom WHERE specialty_id LIKE ?";
 			ResultSet rs = statement.executeQuery(SQL_code);
 			while(rs.next()) {
 				String name = rs.getString("name");

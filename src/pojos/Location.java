@@ -16,17 +16,17 @@ public class Location implements Serializable{
     public enum Vehicle {AMBULANCE,HELICOPTER,BOAT};
 
 	
-	public Location(Integer id, String place, Vehicle vehicle) {
+	public Location(Integer id, String place, String vehicle) {
 		super();
 		this.id = id;
 		this.place = place;
-		this.vehicle = vehicle;
+		this.vehicle = Vehicle.valueOf(vehicle);
 	}
 	
-	public Location(String place, Vehicle vehicle) {
+	public Location(String place, String vehicle) {
 		super();
 		this.place = place;
-		this.vehicle = vehicle;
+		this.vehicle = Vehicle.valueOf(vehicle);
 	}
 
 	public Location(Integer id, String place) {

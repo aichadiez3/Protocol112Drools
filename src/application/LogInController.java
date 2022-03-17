@@ -22,6 +22,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import jdbc.SQLManager;
+import pojos.Emergency;
 
 public class LogInController implements Initializable {
 
@@ -33,6 +34,8 @@ public class LogInController implements Initializable {
 	public static void setValues(SQLManager SQL_manager) {
 		manager_object = SQL_manager;
 	}
+	
+	
 
 	@FXML
     private AnchorPane anchorPane;
@@ -77,7 +80,7 @@ public class LogInController implements Initializable {
 		
 		loginButton.setOnAction((ActionEvent event) -> {
 			try {
-				MenuController.setValues(manager_object, null);
+				MenuController.setManager(manager_object);
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("OptionsView.fxml"));
 				Parent root = (Parent) loader.load();
 				this.menu_controller = new MenuController();

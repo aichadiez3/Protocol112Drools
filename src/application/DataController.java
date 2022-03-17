@@ -88,8 +88,8 @@ public class DataController implements Initializable {
 		drugsField.setItems(drugs);
 		ObservableList<String> chronic = FXCollections.observableArrayList("Yes","No");
 		chronicField.setItems(chronic);
-		ObservableList<String> Location = FXCollections.observableArrayList(manager_object.List_all_places());
-		placeField.setItems(Location);
+		ObservableList<String> location = FXCollections.observableArrayList(manager_object.List_all_places());
+		placeField.setItems(location);
 		
 			
 		
@@ -111,15 +111,17 @@ public class DataController implements Initializable {
 			}
 			
 			
+			System.out.println(emergency);
+			
 			Patient patient = new Patient(nameField.getText(),surnameField.getText(), genderField.getValue(), ageField.getValue(), val, val2, ref_number.toString());
 			manager_object.Insert_new_patient(patient.getName(), patient.getSurname(), patient.getGender(), patient.getAge_range(), patient.getChronic(), 
 					patient.getDrugs(), patient.getReference_number(), emergency.getId());
 			
-			patient = manager_object.Search_stored_patient_by_emergency_id(emergency.getId());
+			//patient = manager_object.Search_stored_patient_by_emergency_id(emergency.getId());
 			
 			
 			Location loc = manager_object.Search_vehicle_by_place_type(placeField.getValue().toString());
-			manager_object.Update_location_and_vehicle(locationField.getText(), loc.getId(), emergency.getId());
+			manager_object.Update_location_and_vehicle(locationField.getText(), loc.getId(), emergency.getId()); 
 			
 			try {
 				SymptomsController.setValues(manager_object, emergency);
@@ -129,7 +131,6 @@ public class DataController implements Initializable {
 				
 			} catch(IOException proceed_error) {
 				proceed_error.printStackTrace();
-				manager_object.Close_connection();
 			}
 		});
 				
@@ -156,7 +157,6 @@ public class DataController implements Initializable {
 		
 		} catch(IOException open_case) {
 			open_case.printStackTrace();
-			manager_object.Close_connection();
 		}
 		
     }
