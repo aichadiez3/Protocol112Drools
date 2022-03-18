@@ -63,9 +63,8 @@ public class examp {
 		sp1.setDisease_list(diseases);
 		
 		Protocol p1 = new Protocol(0,"Go to Urgencies unit for valoration",Protocol.Type.SHIPMENT);
-		List<Protocol> protocol_list = new ArrayList<>();
-		protocol_list.add(p1);
-		u.setProtocol_list(protocol_list);
+		
+		u.setProtocol(p1);
 		// STEPS
 		// 1. WE SPECIFY THE SPECIALITY
 

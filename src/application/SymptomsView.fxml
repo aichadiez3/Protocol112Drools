@@ -63,6 +63,6 @@
             </Label>
          </children>
       </Group>
-      <ComboBox fx:id="specialityField" layoutX="312.0" layoutY="56.0" onAction="#update_label" onMouseClicked="#refresh_list" prefHeight="32.0" prefWidth="283.0" promptText="Speciality of the emergency" styleClass="text-field" stylesheets="@dark-theme.css" />
+      <ComboBox fx:id="specialityField" layoutX="312.0" layoutY="56.0" onAction="#update_label" prefHeight="32.0" prefWidth="283.0" promptText="Speciality of the emergency" styleClass="text-field" stylesheets="@dark-theme.css" />
    </children>
 </Pane>

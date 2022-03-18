@@ -6,8 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import interfaces.Interface;
 import pojos.*;
@@ -15,12 +19,22 @@ import pojos.*;
 public class SQLManager implements Interface {
 
 	private Connection sqlite_connection;
+	private static List<Protocol> protocol_list;
+	private static List<Disease> cardio_disease_list;
 	
 	public SQLManager() {
 		super();
 	}
 	
 	
+	public List<Protocol> getProtocol_list() {
+		return protocol_list;
+	}
+
+	public static List<Disease> getCardio_disease_list() {
+		return cardio_disease_list;
+	}
+
 	public boolean Connect() {
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -105,6 +119,13 @@ public class SQLManager implements Interface {
 					+ "PRIMARY KEY (disease_id, symptom_id))";
 			statement_9.execute(table_9);
 			statement_9.close();
+			
+			Statement statement_10 = this.sqlite_connection.createStatement();
+			String table_10 = "CREATE TABLE specialty_symptom " + " (specialty_id INTEGER REFERENCES specialty(specialty_id), " 
+					+ "symptom_id INTEGER REFERENCES symptom(symptom_id), "
+					+ "PRIMARY KEY (specialty_id, symptom_id))";
+			statement_10.execute(table_10);
+			statement_10.close();
 		
 			
 			return true;
@@ -130,10 +151,50 @@ public class SQLManager implements Interface {
 		Insert_new_specialty("Neurology");
 		Insert_new_specialty("Other");
 		
+		// --------> CARDIOLOGY
+		
+		String[] cardio_symps_1 = "Chest pressure/Fatigue/Pain extends to the left arm/Disnea/Cold sweat".split("/");
+		List<String> cardio_1 = Arrays.asList(cardio_symps_1);
+			
+		String[] cardio_symps_2 = "Phlegm/Swelling/Faints/Fatigue/Heart palpitations".split("/");
+		List<String> cardio_2 = Arrays.asList(cardio_symps_2);
+		
+		List<String> cardio_symp_list = new ArrayList<>();
+			cardio_symp_list.addAll(cardio_1);
+			cardio_symp_list.addAll(cardio_2);
+		
+			// TO REMOVE REPEATED SYMPTOMS
+		Set<String> hashSet = new LinkedHashSet<>(cardio_symp_list);
+        ArrayList<String> cardio_list = new ArrayList<>(hashSet);
+				        
+	        for(int i = 0; i < cardio_list.size(); i++) {
+				Integer index = Insert_new_symptom(cardio_list.get(i));
+				Associate_symptom_to_specialty(index, Search_specialty_id_by_name("Cardiology"));
+				
+			}
+			
+		String[] cardio_diseases = "Heart attack,Heart failure,Hipertensive crisis,Ictus,Syncope".split(",");
+		List<String> cardio_disease_list = Arrays.asList(cardio_diseases);
+		
+		for(int i = 0; i < cardio_disease_list.size(); i++) {
+			Integer index = Insert_new_disease(cardio_disease_list.get(i), Search_specialty_id_by_name("Cardiology"));
+			Associate_symptom_to_disease(i, index);
+		/*
+			for(int symptom_id=0; symptom_id<cardio_1.size(); symptom_id++) {
+				
+				Associate_symptom_to_disease(symptom_id, index);
+			
+			}
+			*/
+		}
+		
 		Insert_new_protocol("Take paracetamol");
 		Insert_new_protocol("Connect to oxygen supply");
 		
 		// ADD HERE MORE PROTOCOLS FROM THE EXCEL
+		
+		protocol_list = new ArrayList<>(List_all_protocols());
+		
 		
 	}
 	
@@ -261,7 +322,7 @@ public class SQLManager implements Interface {
 	}
 	
 	public Integer Insert_new_disease(String name, Integer spe_id) {
-		Integer disease_id;
+		Integer disease_id=-1;
 		String table = "INSERT INTO disease (name, specialty_id) " + "VALUES (?,?)";
 		try {
 			PreparedStatement template = this.sqlite_connection.prepareStatement(table);
@@ -276,12 +337,13 @@ public class SQLManager implements Interface {
 			return disease_id;
 		} catch (SQLException new_disease_error) {
 			new_disease_error.printStackTrace();
-			return -1;
+			return disease_id;
 		}
 	}
 	
+	
 	public Integer Insert_new_symptom(String name) {
-		Integer symptom_id;
+		Integer symptom_id=-1;
 		String table = "INSERT INTO symptom (name) " + "VALUES (?)";
 		try {
 			PreparedStatement template = this.sqlite_connection.prepareStatement(table);
@@ -295,7 +357,39 @@ public class SQLManager implements Interface {
 			return symptom_id;
 		} catch (SQLException new_symptom_error) {
 			new_symptom_error.printStackTrace();
-			return -1;
+			return symptom_id;
+		}
+	}
+	
+	public Boolean Associate_symptom_to_specialty(Integer symp_id, Integer spe_id) {
+		
+		try {
+			String SQL_code = "INSERT INTO specialty_symptom (specialty_id, symptom_id) " + "VALUES (?,?)";
+			PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
+			template.setInt(1, spe_id);
+			template.setInt(2, symp_id);
+			template.executeUpdate();
+			template.close();	
+			return true;
+		} catch (SQLException associate_symp_spe_error) {
+			associate_symp_spe_error.printStackTrace();
+			return false;
+		}
+	}
+	
+	public Boolean Associate_symptom_to_disease(Integer symp_id, Integer disease_id) {
+		
+		try {
+			String SQL_code = "INSERT INTO disease_symptom (disease_id, symptom_id) " + "VALUES (?,?)";
+			PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
+			template.setInt(1, disease_id);
+			template.setInt(2, symp_id);
+			template.executeUpdate();
+			template.close();	
+			return true;
+		} catch (SQLException associate_symp_disease_error) {
+			associate_symp_disease_error.printStackTrace();
+			return false;
 		}
 	}
 	
@@ -317,6 +411,8 @@ public class SQLManager implements Interface {
 			return -1;
 		}
 	}
+	
+	
 	
 	
 	 // -----------------------> SEARCH METHODS <---------------------------
@@ -490,9 +586,34 @@ public class SQLManager implements Interface {
 			
 		}
 	 
-	 public String Search_specialty_by_id(Integer id) {
+	 
+	 
+	 public Specialty Search_specialty_by_name(String name) {
+		 Specialty spe = null;
+		 Integer id=-1;
 			try {
-				String name="";
+				String SQL_code = "SELECT * FROM specialty WHERE name LIKE ?";
+				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
+				template.setString(1, name);
+				ResultSet result_set = template.executeQuery();
+				while (result_set.next()) {
+					id = result_set.getInt("specialty_id");
+				}
+				spe = new Specialty(id,name);
+				template.close();
+				return spe;
+				
+				
+			} catch (SQLException search_specialty_error) {
+				search_specialty_error.printStackTrace();
+				return spe;
+			}
+			
+		}
+	 
+	 public String Search_specialty_by_id(Integer id) {
+		 String name ="";
+			try {
 				String SQL_code = "SELECT name FROM specialty WHERE specialty_id LIKE ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, id);
@@ -504,8 +625,8 @@ public class SQLManager implements Interface {
 				return name;
 				
 				
-			} catch (SQLException search_specialtyName_error) {
-				search_specialtyName_error.printStackTrace();
+			} catch (SQLException search_specialty_error) {
+				search_specialty_error.printStackTrace();
 				return null;
 			}
 			
@@ -578,6 +699,45 @@ public class SQLManager implements Interface {
 			
 		}
 	 
+	 public Disease Search_disease_by_id(Integer id) {
+		 Disease disease=null;
+		 String name="";
+			try {
+				String SQL_code = "SELECT * FROM patient WHERE emergency_id LIKE ?";
+				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
+				template.setInt(1, id);
+				ResultSet result_set = template.executeQuery();
+				while (result_set.next()) {
+					name = result_set.getString("name");
+				}
+				disease = new Disease(id,name);
+				template.close();
+				return disease;
+			} catch (SQLException search_disease_error) {
+				search_disease_error.printStackTrace();
+				return disease;
+			}
+			
+		}
+	 
+	 public String Search_symptom_by_id(Integer id) {
+		 String name="";
+			try {
+				String SQL_code = "SELECT * FROM symptom WHERE symptom_id LIKE ?";
+				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
+				template.setInt(1, id);
+				ResultSet result_set = template.executeQuery();
+				while (result_set.next()) {
+					name = result_set.getString("name");
+				}
+				template.close();
+				return name;
+			} catch (SQLException search_disease_error) {
+				search_disease_error.printStackTrace();
+				return name;
+			}
+			
+		}
 	 
 	 // -----------------------> UPDATE METHODS <---------------------------
 	 
@@ -641,23 +801,6 @@ public class SQLManager implements Interface {
 		}
 	}
 	
-	public List<String> List_all_symptoms(){
-		List<String> list = new LinkedList<String>();
-		try {
-			Statement statement = this.sqlite_connection.createStatement();
-			String SQL_code = "SELECT * FROM symptom";
-			ResultSet rs = statement.executeQuery(SQL_code);
-			while(rs.next()) {
-				String name = rs.getString("name");
-				list.add(name);
-			}
-			return list;
-		} catch (SQLException list_symptoms_error) {
-			list_symptoms_error.printStackTrace();
-			return null;
-		}
-	}
-	
 	public List<String> List_all_specialities(){
 		List<String> list = new LinkedList<String>();
 		try {
@@ -675,6 +818,24 @@ public class SQLManager implements Interface {
 		}
 	}
 	
+	public List<Disease> List_all_diseases_by_specialty_id(Integer spe_id){
+		List<Disease> list = new LinkedList<Disease>();
+		try {
+			String SQL_code = "SELECT * FROM disease WHERE specialty_id LIKE ?";
+			PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
+			template.setInt(1, spe_id);
+			ResultSet rs = template.executeQuery();
+			while(rs.next()) {
+				Integer id = rs.getInt("disease_id");
+				String name = rs.getString("name");
+				list.add(new Disease(id, name));
+			}
+			return list;
+		} catch (SQLException list_diseases_error) {
+			list_diseases_error.printStackTrace();
+			return null;
+		}
+	}
 	
 	public List<String> List_all_places(){
 		List<String> list = new LinkedList<String>();
@@ -693,17 +854,17 @@ public class SQLManager implements Interface {
 		}
 	}
 	
-	//------------> ESTE ESTA MAL. CORREGIR MAS ADELANTE
-	
-	public List<String> List_all_symptoms_by_specialty(Integer specialty_id){
+	public List<String> List_all_symptoms_by_disease(Integer disease_id){
 		List<String> list = new LinkedList<String>();
+		Integer symp_id=-1;
 		try {
-			Statement statement = this.sqlite_connection.createStatement();
-			String SQL_code = "SELECT symptom_id FROM specialty_symptom WHERE specialty_id LIKE ?";
-			ResultSet rs = statement.executeQuery(SQL_code);
+			String SQL_code = "SELECT symptom_id FROM disease_symptom WHERE disease_id LIKE ?";
+			PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
+			template.setInt(1, disease_id);
+			ResultSet rs = template.executeQuery();
 			while(rs.next()) {
-				String name = rs.getString("name");
-				list.add(name);
+				symp_id = rs.getInt("symptom_id");
+				list.add(Search_symptom_by_id(symp_id));
 			}
 			return list;
 		} catch (SQLException list_symptoms_error) {
@@ -712,6 +873,23 @@ public class SQLManager implements Interface {
 		}
 	}
 	
+	public List<Protocol> List_all_protocols() {
+		List<Protocol> list = new LinkedList<Protocol>();
+		try {
+			Statement statement = this.sqlite_connection.createStatement();
+			String SQL_code = "SELECT * FROM protocol";
+			ResultSet rs = statement.executeQuery(SQL_code);
+			while(rs.next()) {
+				Integer id = rs.getInt("protocol_id");
+				String info = rs.getString("info");
+				list.add(new Protocol(id, info));
+			}
+			return list;
+		} catch (SQLException list_protocols_error) {
+			list_protocols_error.printStackTrace();
+			return null;
+		}
+	}
 	
 	
 	 // -----------------------> DB METHODS <---------------------------

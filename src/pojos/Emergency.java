@@ -16,7 +16,6 @@ public class Emergency implements Serializable {
 	private String date;
 	private Integer severity;
 	private String direction;
-	private List<Protocol> protocol_list = new ArrayList<>();
 	public Protocol protocol;
 	public Location location;
 	private Patient patient;
@@ -113,14 +112,6 @@ public class Emergency implements Serializable {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		String regDate = formatter.format(date);
 		return regDate;
-	}
-	
-	public List<Protocol> getProtocol_list() {
-		return protocol_list;
-	}
-
-	public void setProtocol_list(List<Protocol> protocol_list) {
-		this.protocol_list = protocol_list;
 	}
 	
 	public void setProtocol(Protocol protocol) {

@@ -31,7 +31,6 @@ public class Createemergency {
         
         Integer loc_id = controller.Search_location_id_from_emergency(emergency_id);
         
-        
         System.out.println(emergency);
         
 	}
