@@ -38,12 +38,14 @@ public interface Interface {
 	
 	public boolean Update_location_and_vehicle(String location, Integer location_id, Integer urgency_id);
 	public boolean Update_emergency_info(String direction, Integer severity, Integer specialty_id, Integer location_id, Integer protocol_id, Integer emergency_id);
+	public Boolean Associate_symptom_list_to_disease(String symptom_list, Integer disease_id);
+
 	
 	public List<Emergency> List_all_codes();
 	public List<String> List_all_specialities();
-	public List<Disease> List_all_diseases_by_specialty_id(Integer spe_id);
+	public List<String> List_all_diseases_by_specialty_id(Integer spe_id);
 	public List<String> List_all_places();
-	public List<String> List_all_symptoms_by_disease(Integer disease_id);
+	public List<String> List_all_symptoms_by_specialty_id(Integer spe_id);
 	public List<Protocol> List_all_protocols();
 	
 	public boolean Close_connection();

@@ -18,12 +18,12 @@
             <Font name="Copperplate Gothic Bold" size="16.0" />
          </font>
       </Label>
-      <ImageView fx:id="unselectArrow" fitHeight="63.0" fitWidth="66.0" layoutX="380.0" layoutY="325.0" preserveRatio="true">
+      <ImageView fx:id="unselectArrow" fitHeight="63.0" fitWidth="66.0" layoutX="380.0" layoutY="325.0" onMouseClicked="#removeFunction" preserveRatio="true">
          <image>
             <Image url="@icons/noun-left-arrow-4633575.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="selectArrow" fitHeight="63.0" fitWidth="66.0" layoutX="380.0" layoutY="275.0" preserveRatio="true" rotate="180.0">
+      <ImageView fx:id="selectArrow" fitHeight="63.0" fitWidth="66.0" layoutX="380.0" layoutY="275.0" onMouseClicked="#selectFunction" preserveRatio="true" rotate="180.0">
          <image>
             <Image url="@icons/noun-left-arrow-4633575.png" />
          </image>

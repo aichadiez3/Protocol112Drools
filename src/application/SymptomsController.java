@@ -3,8 +3,10 @@ package application;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -22,6 +24,7 @@ import javafx.scene.Group;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -35,7 +38,8 @@ public class SymptomsController implements Initializable {
 	private static Stage main_menu_stage;
 	private static SQLManager manager_object;
 	private static Emergency urgency;
-	private List<Disease> disease_list;
+	private List<String> disease_list;
+	private ListIterator<String> litr = null;
 	
 	public static void setValues(SQLManager SQL_manager, Emergency urgen) {
 		manager_object = SQL_manager;
@@ -76,6 +80,8 @@ public class SymptomsController implements Initializable {
 		ObservableList<String> specialities = FXCollections.observableArrayList(manager_object.List_all_specialities());
 		specialityField.setItems(specialities);
 		
+		symptomsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // To select nultiple items
+		selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		
 		saveButton.setOnMouseClicked((MouseEvent event) -> {
 
@@ -131,23 +137,66 @@ public class SymptomsController implements Initializable {
     }
 	
 	void refresh_list() {
+		
 		String spe_name = specialityField.getValue().toString();
+		Integer spe_id = manager_object.Search_specialty_id_by_name(spe_name);
 		
-		disease_list = new ArrayList<>(manager_object.List_all_diseases_by_specialty_id(manager_object.Search_specialty_id_by_name(spe_name)));
+		List<String> symp = manager_object.List_all_symptoms_by_specialty_id(spe_id);
 		
-		ObservableList<String> symptoms = FXCollections.observableArrayList();
-		List<String> symps_spe = new ArrayList<>();
-		
-		for(Disease d : disease_list) {
-			symps_spe.addAll(d.getSymptomsList());
-		}
-		
-		Set<String> hashSet = new LinkedHashSet<>(symps_spe);
+		Set<String> hashSet = new LinkedHashSet<>(symp); // avoid repetitions
         ArrayList<String> final_list = new ArrayList<>(hashSet);
-		symptoms.addAll(final_list);
+		
+        ObservableList<String> symptoms = FXCollections.observableArrayList(final_list);
 		
 		symptomsList.setItems(symptoms);
+		
 	}
+
+
+	void check_repetitions() {
+		
+		if (!symptomsList.getItems().contains(selectedList.getItems())) {
+			refresh_list();
+			
+			symptomsList.getItems().removeAll(selectedList.getItems());
+			
+			System.out.println("no repeated items");
+		}else {
+			System.out.println("items repeated");
+		}
+	}
+	
+	@FXML
+    void removeFunction(MouseEvent event) {
+		ObservableList<String> selectedItems =  selectedList.getSelectionModel().getSelectedItems();
+        ObservableList<String> items = FXCollections.observableArrayList();
+        
+        for(String s : selectedItems){
+        	
+        	items.add(s);
+        	
+        }
+        	symptomsList.setItems(items);
+        	selectedList.getItems().removeAll(selectedItems);
+        	check_repetitions();
+    }
+
+    @FXML
+    void selectFunction(MouseEvent event) {
+    	
+        ObservableList<String> selectedItems =  symptomsList.getSelectionModel().getSelectedItems();
+        ObservableList<String> items = FXCollections.observableArrayList(selectedList.getItems());
+        
+        for(String s : selectedItems){
+        	items.add(s);
+        }
+        	selectedList.setItems(items);
+	     // when item is selected, it is deleted from the list
+	    	symptomsList.getItems().removeAll(selectedItems);
+        	
+        
+    }
+	
 	
 	@FXML
     void close_window(MouseEvent event) {

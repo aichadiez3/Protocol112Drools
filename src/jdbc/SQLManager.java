@@ -13,6 +13,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import interfaces.Interface;
 import pojos.*;
 
@@ -102,7 +104,8 @@ public class SQLManager implements Interface {
 			
 			Statement statement_7 = this.sqlite_connection.createStatement();
 			String table_7 = " CREATE TABLE disease " + "(disease_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-			        + " name TEXT NOT NULL," + "specialty_id INTEGER FOREING KEY REFERENCES specialty(specialty_id) ON DELETE CASCADE)";
+			        + " name TEXT NOT NULL," + " symptom_list TEXT default NULL, "
+					+ "specialty_id INTEGER FOREING KEY REFERENCES specialty(specialty_id) ON DELETE CASCADE)";
 			statement_7.execute(table_7);
 			statement_7.close();
 			
@@ -151,42 +154,81 @@ public class SQLManager implements Interface {
 		Insert_new_specialty("Neurology");
 		Insert_new_specialty("Other");
 		
+		
+		List<String> saver = new ArrayList<>(); 
+		
 		// --------> CARDIOLOGY
 		
-		String[] cardio_symps_1 = "Chest pressure/Fatigue/Pain extends to the left arm/Disnea/Cold sweat".split("/");
-		List<String> cardio_1 = Arrays.asList(cardio_symps_1);
+		
+		List<String> cardio_symps_1 = Arrays.asList("Chest pressure/Fatigue/Pain extends to the left arm/Disnea/Cold sweat/|".split("/"));
+		List<String> cardio_symps_2 = Arrays.asList("Phlegm/Swelling/Faints/Fatigue/Heart palpitations/|".split("/"));
+		List<String> cardio_symps_3 = Arrays.asList("Swelling/Faints/Fatigue/|".split("/"));
+		List<String> cardio_symps_4 = Arrays.asList("Sudden numbness/Paralysis/Confusion/Difficulty speaking or undestand/Loss of vision/Loss of balance/Pain/|".split("/"));
+		List<String> cardio_symps_5 = Arrays.asList("Pale skin/Daze/Tunnel vision/Warmth sensation/Cold sweat/|".split("/"));
+
+		
+		List<String> names = new ArrayList<>();
+			names.addAll(cardio_symps_1);
+			names.addAll(cardio_symps_2);
+			names.addAll(cardio_symps_3);
+			names.addAll(cardio_symps_4);
+			names.addAll(cardio_symps_5);
+		
+		List<Symptom> cardio_symp_list = new ArrayList<>();
+		int m=0;
+		for(String n : names) {
 			
-		String[] cardio_symps_2 = "Phlegm/Swelling/Faints/Fatigue/Heart palpitations".split("/");
-		List<String> cardio_2 = Arrays.asList(cardio_symps_2);
+			if(m < names.size()) {
+				cardio_symp_list.add(new Symptom(m, n));
+				m++;
+			} else {
+				break;
+			}
+			
+		}
 		
-		List<String> cardio_symp_list = new ArrayList<>();
-			cardio_symp_list.addAll(cardio_1);
-			cardio_symp_list.addAll(cardio_2);
+		// Assosiate to disease
 		
-			// TO REMOVE REPEATED SYMPTOMS
-		Set<String> hashSet = new LinkedHashSet<>(cardio_symp_list);
+		List<String> cardio_disease_list = Arrays.asList("Heart attack,Heart failure,Hipertensive crisis,Ictus,Syncope".split(","));
+		
+		Integer i = 0;
+		for (String d: cardio_disease_list) {
+			
+			Integer index = Insert_new_disease(d, Search_specialty_id_by_name("Cardiology"));
+			
+			if(cardio_symp_list.get(i).toString().contains("|")) {
+				i++;
+			} 
+			
+			while(!cardio_symp_list.get(i).toString().contains("|")) {
+
+				saver.add(cardio_symp_list.get(i).getSymptom());
+				i++;
+				
+			}
+			
+			Associate_symptom_list_to_disease(saver.toString(), Search_disease_by_id(index).getId());
+			saver.clear();
+		}
+				
+		
+		//Remove repetitions and associate symptoms to specialty
+		
+		Set<String> hashSet = new LinkedHashSet<>(names);
         ArrayList<String> cardio_list = new ArrayList<>(hashSet);
 				        
-	        for(int i = 0; i < cardio_list.size(); i++) {
-				Integer index = Insert_new_symptom(cardio_list.get(i));
-				Associate_symptom_to_specialty(index, Search_specialty_id_by_name("Cardiology"));
-				
-			}
+        for(int it = 0; it < cardio_list.size(); it++) {
+        	
+        	if (cardio_list.get(it).equals("|")) {
+        		cardio_list.remove(it);
+        	} else {
+        		Integer index = Insert_new_symptom(cardio_list.get(it));
+        		Associate_symptom_to_specialty(index, Search_specialty_id_by_name("Cardiology"));
+        	}
 			
-		String[] cardio_diseases = "Heart attack,Heart failure,Hipertensive crisis,Ictus,Syncope".split(",");
-		List<String> cardio_disease_list = Arrays.asList(cardio_diseases);
-		
-		for(int i = 0; i < cardio_disease_list.size(); i++) {
-			Integer index = Insert_new_disease(cardio_disease_list.get(i), Search_specialty_id_by_name("Cardiology"));
-			Associate_symptom_to_disease(i, index);
-		/*
-			for(int symptom_id=0; symptom_id<cardio_1.size(); symptom_id++) {
-				
-				Associate_symptom_to_disease(symptom_id, index);
 			
-			}
-			*/
 		}
+			
 		
 		Insert_new_protocol("Take paracetamol");
 		Insert_new_protocol("Connect to oxygen supply");
@@ -377,21 +419,7 @@ public class SQLManager implements Interface {
 		}
 	}
 	
-	public Boolean Associate_symptom_to_disease(Integer symp_id, Integer disease_id) {
-		
-		try {
-			String SQL_code = "INSERT INTO disease_symptom (disease_id, symptom_id) " + "VALUES (?,?)";
-			PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
-			template.setInt(1, disease_id);
-			template.setInt(2, symp_id);
-			template.executeUpdate();
-			template.close();	
-			return true;
-		} catch (SQLException associate_symp_disease_error) {
-			associate_symp_disease_error.printStackTrace();
-			return false;
-		}
-	}
+	
 	
 	public Integer Insert_new_protocol(String info) {
 		Integer protocol_id;
@@ -777,6 +805,21 @@ public class SQLManager implements Interface {
 			}
 	 }
 	 
+	 public Boolean Associate_symptom_list_to_disease(String symptom_list, Integer disease_id) {
+			
+			try {
+				String SQL_code = "UPDATE disease SET symptom_list = ? WHERE disease_id LIKE ?";
+				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
+				template.setString(1, symptom_list);
+				template.setInt(2, disease_id);
+				template.executeUpdate();
+				template.close();	
+				return true;
+			} catch (SQLException associate_symp_disease_error) {
+				associate_symp_disease_error.printStackTrace();
+				return false;
+			}
+		}
 	 
 	 // -----------------------> LIST METHODS <---------------------------
 
@@ -818,17 +861,16 @@ public class SQLManager implements Interface {
 		}
 	}
 	
-	public List<Disease> List_all_diseases_by_specialty_id(Integer spe_id){
-		List<Disease> list = new LinkedList<Disease>();
+	public List<String> List_all_diseases_by_specialty_id(Integer spe_id){
+		List<String> list = new LinkedList<String>();
 		try {
-			String SQL_code = "SELECT * FROM disease WHERE specialty_id LIKE ?";
+			String SQL_code = "SELECT name FROM disease WHERE specialty_id LIKE ?";
 			PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 			template.setInt(1, spe_id);
 			ResultSet rs = template.executeQuery();
 			while(rs.next()) {
-				Integer id = rs.getInt("disease_id");
 				String name = rs.getString("name");
-				list.add(new Disease(id, name));
+				list.add(name);
 			}
 			return list;
 		} catch (SQLException list_diseases_error) {
@@ -836,6 +878,7 @@ public class SQLManager implements Interface {
 			return null;
 		}
 	}
+	
 	
 	public List<String> List_all_places(){
 		List<String> list = new LinkedList<String>();
@@ -854,17 +897,17 @@ public class SQLManager implements Interface {
 		}
 	}
 	
-	public List<String> List_all_symptoms_by_disease(Integer disease_id){
+	public List<String> List_all_symptoms_by_specialty_id(Integer spe_id){
 		List<String> list = new LinkedList<String>();
-		Integer symp_id=-1;
 		try {
-			String SQL_code = "SELECT symptom_id FROM disease_symptom WHERE disease_id LIKE ?";
+			String SQL_code = "SELECT symptom_id FROM specialty_symptom WHERE specialty_id LIKE ?";
 			PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
-			template.setInt(1, disease_id);
+			template.setInt(1, spe_id);
 			ResultSet rs = template.executeQuery();
 			while(rs.next()) {
-				symp_id = rs.getInt("symptom_id");
-				list.add(Search_symptom_by_id(symp_id));
+				Integer id = rs.getInt("symptom_id");
+				String name = Search_symptom_by_id(id);
+				list.add(name);
 			}
 			return list;
 		} catch (SQLException list_symptoms_error) {
@@ -872,6 +915,8 @@ public class SQLManager implements Interface {
 			return null;
 		}
 	}
+	
+	
 	
 	public List<Protocol> List_all_protocols() {
 		List<Protocol> list = new LinkedList<Protocol>();
