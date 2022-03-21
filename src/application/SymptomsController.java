@@ -1,12 +1,11 @@
 package application;
 
 import java.io.IOException;
+
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -30,7 +29,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import jdbc.SQLManager;
-import pojos.Disease;
 import pojos.Emergency;
 
 public class SymptomsController implements Initializable {
@@ -38,8 +36,6 @@ public class SymptomsController implements Initializable {
 	private static Stage main_menu_stage;
 	private static SQLManager manager_object;
 	private static Emergency urgency;
-	private List<String> disease_list;
-	private ListIterator<String> litr = null;
 	
 	public static void setValues(SQLManager SQL_manager, Emergency urgen) {
 		manager_object = SQL_manager;
@@ -57,6 +53,9 @@ public class SymptomsController implements Initializable {
 	
 	@FXML
     private ComboBox<String> specialityField;
+	
+	@FXML
+    private ComboBox<String> diseaseField;
 	
 	@FXML
     private ListView<String> symptomsList;
@@ -79,6 +78,8 @@ public class SymptomsController implements Initializable {
 		
 		ObservableList<String> specialities = FXCollections.observableArrayList(manager_object.List_all_specialities());
 		specialityField.setItems(specialities);
+		
+		diseaseField.setDisable(true);
 		
 		symptomsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // To select nultiple items
 		selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -105,6 +106,19 @@ public class SymptomsController implements Initializable {
 			
 		});
 		
+		
+		diseaseField.setOnAction((ActionEvent e) -> {
+			
+			List<String> list = manager_object.List_all_symptoms_by_disease(diseaseField.getValue());
+			
+			ObservableList<String>symps = FXCollections.observableArrayList(list);                  
+                
+            selectedList.setItems(symps);
+           
+            symptomsList.getItems().removeAll(selectedList.getItems());
+            
+		});
+		
 	}
 	
 	
@@ -112,10 +126,11 @@ public class SymptomsController implements Initializable {
 		 
 			System.out.println("BEFORE:\n" + urgency);
 		 
-		 KieSession ksession = kc.newKieSession("exampKS");
+		 KieSession ksession = kc.newKieSession("appKS");
 				 
-		 ksession.insert(manager_object);
-		 ksession.insert(urgency);
+		 //ksession.insert(manager_object);
+		 Emergency u = urgency;
+		 ksession.insert(u);
 		 ksession.fireAllRules();
 		 ksession.dispose();
 	 }
@@ -133,8 +148,13 @@ public class SymptomsController implements Initializable {
 			textLabel.setText(textLabel.getText() + selected);
 		}
 		
+		diseaseField.setDisable(false);
+		ObservableList<String> diseases = FXCollections.observableArrayList(manager_object.List_all_diseases_by_specialty_id(manager_object.Search_specialty_id_by_name(specialityField.getValue())));
+		diseaseField.setItems(diseases);
+		
 		refresh_list();
     }
+	
 	
 	void refresh_list() {
 		
@@ -143,29 +163,21 @@ public class SymptomsController implements Initializable {
 		
 		List<String> symp = manager_object.List_all_symptoms_by_specialty_id(spe_id);
 		
-		Set<String> hashSet = new LinkedHashSet<>(symp); // avoid repetitions
-        ArrayList<String> final_list = new ArrayList<>(hashSet);
-		
-        ObservableList<String> symptoms = FXCollections.observableArrayList(final_list);
-		
+        ObservableList<String> symptoms = delete_repetitions(symp);
 		symptomsList.setItems(symptoms);
 		
 	}
-
-
-	void check_repetitions() {
-		
-		if (!symptomsList.getItems().contains(selectedList.getItems())) {
-			refresh_list();
-			
-			symptomsList.getItems().removeAll(selectedList.getItems());
-			
-			System.out.println("no repeated items");
-		}else {
-			System.out.println("items repeated");
-		}
-	}
 	
+	private ObservableList<String> delete_repetitions(List<String> input) {
+		Set<String> hashSet = new LinkedHashSet<>(input); // avoid repetitions
+        ArrayList<String> final_list = new ArrayList<>(hashSet);
+		
+        ObservableList<String> output = FXCollections.observableArrayList(final_list);
+		return output;
+	}
+
+	
+	@SuppressWarnings("unlikely-arg-type")
 	@FXML
     void removeFunction(MouseEvent event) {
 		ObservableList<String> selectedItems =  selectedList.getSelectionModel().getSelectedItems();
@@ -178,7 +190,14 @@ public class SymptomsController implements Initializable {
         }
         	symptomsList.setItems(items);
         	selectedList.getItems().removeAll(selectedItems);
-        	check_repetitions();
+        	
+        	
+        	// To check repetitions in list
+        	if (!symptomsList.getItems().contains(selectedList.getItems())) {
+    			refresh_list();
+    			symptomsList.getItems().removeAll(selectedList.getItems());
+    		}
+    		
     }
 
     @FXML

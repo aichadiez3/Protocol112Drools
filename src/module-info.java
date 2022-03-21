@@ -8,6 +8,7 @@ module Protocol112Drools
 	requires java.sql;
 	requires org.kie.api;
 	requires jdk.compiler;
+	requires java.base;
 	
 	opens application to javafx.graphics, javafx.fxml;
 }

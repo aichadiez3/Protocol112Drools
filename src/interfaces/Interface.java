@@ -44,6 +44,7 @@ public interface Interface {
 	public List<Emergency> List_all_codes();
 	public List<String> List_all_specialities();
 	public List<String> List_all_diseases_by_specialty_id(Integer spe_id);
+	public List<String> List_all_symptoms_by_disease(String disease);
 	public List<String> List_all_places();
 	public List<String> List_all_symptoms_by_specialty_id(Integer spe_id);
 	public List<Protocol> List_all_protocols();

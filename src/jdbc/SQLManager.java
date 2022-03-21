@@ -879,6 +879,24 @@ public class SQLManager implements Interface {
 		}
 	}
 	
+	public List<String> List_all_symptoms_by_disease(String disease){
+		List<String> list = new ArrayList<String>();
+		String symptom = "";
+		try {
+			String SQL_code = "SELECT symptom_list FROM disease WHERE name LIKE ?";
+			PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
+			template.setString(1, disease);
+			ResultSet rs = template.executeQuery();
+			while(rs.next()) {
+				symptom = rs.getString("symptom_list");
+			}
+			list.addAll(Arrays.asList(symptom.split(",")));
+			return list;
+		} catch (SQLException list_diseases_error) {
+			list_diseases_error.printStackTrace();
+			return null;
+		}
+	}
 	
 	public List<String> List_all_places(){
 		List<String> list = new LinkedList<String>();

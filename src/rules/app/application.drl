@@ -16,11 +16,13 @@ rule "cardiology_heart_attack"
 	dialect "java"
 	when
 	    SQLManager : dbm
-		urgency : Emergency (specialty.getName().equalsIgnoreCase("Heart attack"))
+		//u : Emergency (getSpecialty().getName().equalsIgnoreCase("Heart attack"))
+		u : Emergency (getSpecialty().getName().equals("Heart attack"))
+		
 	then
 		u.getSpecialty().setDisease(dbm.getCardio_disease_list().get(0));
 		//u.setProtocol(u.getProtocol_list().get(0));
-		dbm.Update_emergency_info(urgency.getDirection(), urgency.setSeverity(1), urgency.getSpecialty().getId(), urgency.getLocation().getId(), dbm.getProtocol_list().get(0));
+		dbm.Update_emergency_info(u.getDirection(), u.setSeverity(1), u.getSpecialty().getId(), u.getLocation().getId(), dbm.getProtocol_list().get(0));
 		
 end;
 
