@@ -16,9 +16,10 @@ public interface Interface {
 	public Integer Insert_new_emergency(Integer code, String date);
 	public Integer Insert_new_location(String type, String vehicle);
 	public Integer Insert_new_specialty(String name);
+	public Disease Insert_new_disease(String name, Integer spe_id);
 	public Integer Insert_new_symptom(String name);
 	public Boolean Associate_symptom_to_specialty(Integer symp_id, Integer spe_id);
-	public Integer Insert_new_disease(String name, Integer spe_id);
+	public Integer Insert_new_protocol(String info);
 	
 	public Patient Search_stored_patient_by_id(Integer patient_id);
 	public Patient Search_stored_patient_by_emergency_id(Integer emergency_id);
@@ -29,6 +30,7 @@ public interface Interface {
 	public Emergency Search_stored_emergency_by_code(Integer code);
 	public Integer Search_specialty_id_by_name(String name);
 	public Specialty Search_specialty_by_name(String name);
+	public String Search_specialty_by_id(Integer id);
 	public Integer Search_specialty_by_emergency_id(Integer id);
 	public Integer Search_protocol_by_emergency_id(Integer id);
 	public String Search_protocol_info_by_id(Integer id);
@@ -37,13 +39,13 @@ public interface Interface {
 	
 	
 	public boolean Update_location_and_vehicle(String location, Integer location_id, Integer urgency_id);
-	public boolean Update_emergency_info(String direction, Integer severity, Integer specialty_id, Integer location_id, Integer protocol_id, Integer emergency_id);
+	public boolean Update_emergency_info(String direction, int severity, Integer specialty_id, Integer location_id, int protocol_id, Integer emergency_id);
 	public Boolean Associate_symptom_list_to_disease(String symptom_list, Integer disease_id);
 
 	
 	public List<Emergency> List_all_codes();
 	public List<String> List_all_specialities();
-	public List<String> List_all_diseases_by_specialty_id(Integer spe_id);
+	public List<Disease> List_all_diseases_by_specialty_id(Integer spe_id);
 	public List<String> List_all_symptoms_by_disease(String disease);
 	public List<String> List_all_places();
 	public List<String> List_all_symptoms_by_specialty_id(Integer spe_id);

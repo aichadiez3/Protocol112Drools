@@ -22,7 +22,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import jdbc.SQLManager;
-import pojos.Emergency;
 
 public class LogInController implements Initializable {
 
@@ -71,12 +70,13 @@ public class LogInController implements Initializable {
 		
 		
 		manager_object = new SQLManager();
+		/*
 		manager_object.Connect();
         Boolean tables = manager_object.Create_tables();
         if(tables==true) {
         	manager_object.Insert_default_elements_toDB();
         }
-		
+		*/
 		
 		loginButton.setOnAction((ActionEvent event) -> {
 			try {

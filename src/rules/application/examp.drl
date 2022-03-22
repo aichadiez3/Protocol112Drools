@@ -15,66 +15,16 @@ import jdbc.SQLManager;
 rule "cardiology_heart_attack"
 	dialect "java"
 	when
-	    SQLManager : dbm
-		urgency : Emergency (specialty.getName().equalsIgnoreCase("Heart attack"))
+	    dbm : SQLManager(  )
+		//u : Emergency (getSpecialty().getName().equalsIgnoreCase("Heart attack"))
+		u : Emergency (getSpecialty().getDisease().getDisease().equals("Heart attack")) // CONSIDERAR LOS SINTOMAS, SINO NO VA A FUNCIONAR --> NO SE PEUDE CONSIDERAR POR DISEASE PORQ ES NULL  --> LO ASOCIAMOS DESPUES
 	then
-		u.getSpecialty().setDisease(dbm.getCardio_disease_list().get(0));
+		//u.getSpecialty().setDisease_list(dbm.getCardio_disease_list());
+		u.getSpecialty().setDisease_list(dbm.getCardio_disease_list());
+		u.setDisease(dbm.getCardio_disease_list().get(0));
 		//u.setProtocol(u.getProtocol_list().get(0));
-		dbm.Update_emergency_info(urgency.getDirection(), urgency.setSeverity(1), urgency.getSpecialty().getId(), urgency.getLocation().getId(), dbm.getProtocol_list().get(0));
-		
-end;
-
-rule "home"
-
-    dialect "java"
-    when
-        u : Emergency (getLocation().getPlace().equals("Home"))
-    then 
-        u.getLocation().setVehicle(Location.Vehicle.AMBULANCE);
+		//dbm.Update_emergency_info(u.getDirection(), u.setSeverity(1), u.getSpecialty().getId(), u.getLocation().getId(), dbm.getProtocol_list().get(0));
+		dbm.Update_emergency_info(u.getDirection(), 1, u.getSpecialty().getId(), u.getLocation().getId(), 0, u.getId());
+		System.out.println(dbm.Search_stored_emergency_by_code(u.getCode()));
 end
 
-rule "transit"
-
-    dialect "java"
-    when
-        u : Emergency (getLocation().getPlace().equals("Transit"))
-    then 
-        u.getLocation().setVehicle(Location.Vehicle.AMBULANCE);
-end
-
-rule "at work"
-
-    dialect "java"
-    when
-        u : Emergency (getLocation().getPlace().equals("Work place"))
-    then 
-        u.getLocation().setVehicle(Location.Vehicle.AMBULANCE);
-end
-
-rule "mountain"
-
-    dialect "java"
-    when
-        u : Emergency (getLocation().getPlace().equals("Mountain"))
-    then 
-        u.getLocation().setVehicle(Location.Vehicle.HELICOPTER);
-end
-
-rule "at the beach"
-
-    dialect "java"
-    when
-        u : Emergency (getLocation().getPlace().equals("Beach"))
-    then 
-        u.getLocation().setVehicle(Location.Vehicle.BOAT);
-end
-
-/*
-rule "if advice"
-	dialect "java"
-	when
-		u : Emergency (getProtocol().getProtocolType() == Protocol.Type.ADVICE)
-	then
-		u.getLocation().setVehicle(null);
-end
-*/

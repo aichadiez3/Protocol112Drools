@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kmodule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://www.drools.org/xsd/kmodule">
-   
-	  
-	  <kbase name="vehicles" packages="rules.application.vehicles">
-	      <ksession name="vechicleKS"/>
-	  </kbase>
 	  
 	  <kbase name="symptom" packages="rules.application.symptoms">
 	      <ksession name="symptomsKS"/>

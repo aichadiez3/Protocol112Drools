@@ -11,7 +11,7 @@ public class Specialty implements Serializable{
 	
 	private Integer id;
 	private String name;
-	public List<Disease> disease_list = new ArrayList<>();
+	public List<Disease> disease_list = new ArrayList<Disease>();
 	
 	public Specialty(String name) {
 		super();
@@ -47,6 +47,7 @@ public class Specialty implements Serializable{
 	}
 
 	public void setDisease_list(List<Disease> disease_list) {
+		
 		this.disease_list = disease_list;
 	}
 

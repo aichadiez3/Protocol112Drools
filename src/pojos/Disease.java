@@ -14,7 +14,7 @@ public class Disease implements Serializable{
 	
 	private Integer id;
 	private String disease;
-	private List<String> symptomsList = new ArrayList<String>();
+	private String symptomsList;
 	
 	public Disease(String disease) {
 		super();
@@ -25,6 +25,13 @@ public class Disease implements Serializable{
 		super();
 		this.id = id;
 		this.disease = disease;
+	}
+	
+	public Disease(Integer id, String disease, String symptomList) {
+		super();
+		this.id = id;
+		this.disease = disease;
+		this.symptomsList = symptomList;
 	}
 	
 	public Integer getId() {
@@ -43,11 +50,11 @@ public class Disease implements Serializable{
 		this.disease = disease;
 	}
 
-	public List<String> getSymptomsList() {
+	public String getSymptomsList() {
 		return symptomsList;
 	}
 
-	public void setSymptomsList(List<String> symptomsList) {
+	public void setSymptomsList(String symptomsList) {
 		this.symptomsList = symptomsList;
 	}
 

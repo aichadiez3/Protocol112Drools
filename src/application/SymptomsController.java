@@ -29,6 +29,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import jdbc.SQLManager;
+import pojos.Disease;
 import pojos.Emergency;
 
 public class SymptomsController implements Initializable {
@@ -81,13 +82,13 @@ public class SymptomsController implements Initializable {
 		
 		diseaseField.setDisable(true);
 		
-		symptomsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // To select nultiple items
+		symptomsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // To select multiple items
 		selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		
 		saveButton.setOnMouseClicked((MouseEvent event) -> {
 
 			urgency.setSpecialty(manager_object.Search_specialty_by_name(specialityField.getValue().toString()));
-						
+			
 			KieServices ks = KieServices.Factory.get();
 			KieContainer kc = ks.getKieClasspathContainer();
 			
@@ -110,11 +111,8 @@ public class SymptomsController implements Initializable {
 		diseaseField.setOnAction((ActionEvent e) -> {
 			
 			List<String> list = manager_object.List_all_symptoms_by_disease(diseaseField.getValue());
-			
-			ObservableList<String>symps = FXCollections.observableArrayList(list);                  
-                
+			ObservableList<String>symps = FXCollections.observableArrayList(list); 
             selectedList.setItems(symps);
-           
             symptomsList.getItems().removeAll(selectedList.getItems());
             
 		});
@@ -126,11 +124,10 @@ public class SymptomsController implements Initializable {
 		 
 			System.out.println("BEFORE:\n" + urgency);
 		 
-		 KieSession ksession = kc.newKieSession("appKS");
+		 KieSession ksession = kc.newKieSession("exampKS");
 				 
-		 //ksession.insert(manager_object);
-		 Emergency u = urgency;
-		 ksession.insert(u);
+		 ksession.insert(manager_object);
+		 ksession.insert(urgency);
 		 ksession.fireAllRules();
 		 ksession.dispose();
 	 }
@@ -149,9 +146,15 @@ public class SymptomsController implements Initializable {
 		}
 		
 		diseaseField.setDisable(false);
-		ObservableList<String> diseases = FXCollections.observableArrayList(manager_object.List_all_diseases_by_specialty_id(manager_object.Search_specialty_id_by_name(specialityField.getValue())));
-		diseaseField.setItems(diseases);
+		Integer spe_id = manager_object.Search_specialty_id_by_name(specialityField.getValue());
+		List<Disease> list = manager_object.List_all_diseases_by_specialty_id(spe_id);
+		ObservableList<String> diseases = FXCollections.observableArrayList();
+
+		for(Disease d : list) {
+			diseases.add(d.getDisease());
+		}
 		
+		diseaseField.setItems(diseases);
 		refresh_list();
     }
 	
@@ -203,17 +206,20 @@ public class SymptomsController implements Initializable {
     @FXML
     void selectFunction(MouseEvent event) {
     	
-        ObservableList<String> selectedItems =  symptomsList.getSelectionModel().getSelectedItems();
+        List<String> selectedItems =  symptomsList.getSelectionModel().getSelectedItems();
         ObservableList<String> items = FXCollections.observableArrayList(selectedList.getItems());
         
         for(String s : selectedItems){
-        	items.add(s);
-        }
-        	selectedList.setItems(items);
-	     // when item is selected, it is deleted from the list
-	    	symptomsList.getItems().removeAll(selectedItems);
+        	if(!items.contains(s)) {			// NO ELIMINA LAS REPETICIONES
+        		items.add(s);
+        	}
         	
-        
+        }
+        selectedList.setItems(items);
+     // when item is selected, it is deleted from the list
+    	symptomsList.getItems().removeAll(selectedList.getItems());
+    	
+    
     }
 	
 	
