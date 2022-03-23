@@ -20,13 +20,13 @@ public class Location implements Serializable{
 		super();
 		this.id = id;
 		this.place = place;
-		this.vehicle = Vehicle.valueOf(vehicle);
+		this.vehicle = Vehicle.valueOf(vehicle.toUpperCase());
 	}
 	
 	public Location(String place, String vehicle) {
 		super();
 		this.place = place;
-		this.vehicle = Vehicle.valueOf(vehicle);
+		this.vehicle = Vehicle.valueOf(vehicle.toUpperCase());
 	}
 
 	public Location(Integer id, String place) {

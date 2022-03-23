@@ -85,6 +85,7 @@ public class SQLManager implements Interface {
 					+ " code INTEGER NOT NULL UNIQUE, " + " level INTEGER default NULL, " + "register_date TEXT NOT NULL, "
 					+ " direction TEXT default NULL, " + " location_id INTEGER FOREING KEY REFERENCES location(location_id), "
 					+ " specialty_id INTEGER FOREING KEY REFERENCES specialty(specialty_id) ON DELETE CASCADE, "
+					+ " disease_id INTEGER FOREING KEY REFERENCES disease(disease_id) ON DELETE CASCADE, "
 					+ " protocol_id INTEGER FOREING KEY REFERENCES protocol(protocol_id) ON DELETE CASCADE)";
 					
 			statement_4.execute(table_4);
@@ -541,10 +542,9 @@ public class SQLManager implements Interface {
 	
 	
 	 public Location Search_vehicle_by_place_type(String place) {
-		 
+		 Location loc = null;
 			try {
-				String vehicle="";
-				Integer loc_id=-1;
+				String vehicle="";Integer loc_id=-1;
 				
 				String SQL_code = "SELECT * FROM location WHERE type LIKE ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
@@ -554,17 +554,17 @@ public class SQLManager implements Interface {
 					vehicle = result_set.getString("vehicle");
 					loc_id = result_set.getInt("location_id");
 				}
-				Location loc = new Location(loc_id, place, vehicle);
+				loc = new Location(loc_id, place, vehicle);
 				template.close();
 				return loc;
 			} catch (SQLException search_vehicle_error) {
 				search_vehicle_error.printStackTrace();
-				return null;
+				return loc;
 			}
 		}
 	 
-	 public Integer Search_location_id_from_emergency(Integer emergency_id) {
-		 Integer location_id=-1;
+	 public Location Search_location_from_emergency(Integer emergency_id) {
+		 Integer location_id=-1; Location loc = null;
 			try {
 				String SQL_code = "SELECT location_id FROM emergency WHERE emergency_id LIKE ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
@@ -573,29 +573,61 @@ public class SQLManager implements Interface {
 				while(result_set.next()) {
 					location_id = result_set.getInt("location_id");
 				}
+				loc = Search_location_by_id(location_id);
 				template.close();
-				return location_id;
+				return loc;
 			} catch (SQLException search_location_error) {
 				search_location_error.printStackTrace();
-				return location_id;
+				return loc;
+			}
+		}
+	 
+	 public Location Search_location_by_id(Integer id) {
+		 Location loc = null; String type="",vehicle="";
+			try {
+				String SQL_code = "SELECT * FROM location WHERE location_id LIKE ?";
+				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
+				template.setInt(1, id);
+				ResultSet result_set = template.executeQuery();
+				while(result_set.next()) {
+					type = result_set.getString("type");
+					//vehicle = result_set.getString("vehicle");
+				}
+				//loc = new Location(id,type,vehicle);
+				loc = new Location(id,type);
+
+				template.close();
+				return loc;
+			} catch (SQLException search_location_error) {
+				search_location_error.printStackTrace();
+				return loc;
 			}
 		}
 	 
 	 public Emergency Search_stored_emergency_by_code(Integer code) {
-		 	
+		Integer emergency_id=-1, level=-1, spe_id=-1, disease_id=-1, protocol_id=-1, location_id=-1;
+		String date = "", direction="";	
 			try {
 				String SQL_code = "SELECT * FROM emergency WHERE code LIKE ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, code);
 				ResultSet result_set = template.executeQuery();
-				Integer emergency_id = null, level = null;
-				String date = null;
+				
 			    while(result_set.next()) {
 			    	emergency_id = result_set.getInt("emergency_id");
 			    	level = result_set.getInt("level");
+			    	direction = result_set.getString("direction");
 			    	date = result_set.getString("register_date");
+			    	location_id = result_set.getInt("location_id");
+			    	spe_id = result_set.getInt("specialty_id");
+			    	disease_id = result_set.getInt("disease_id");
+			    	protocol_id = result_set.getInt("protocol_id");
 			    }
-				Emergency emergency = new Emergency(emergency_id, code, date, level);
+			    Specialty spe = Search_specialty_by_emergency_id(emergency_id);
+			    Disease dis = Search_disease_by_id(disease_id);
+			    Location loc = Search_location_from_emergency(emergency_id);
+			    Protocol prot = Search_protocol_by_emergency_id(protocol_id);
+				Emergency emergency = new Emergency(emergency_id, code, date, level, direction, prot, loc, spe, dis);
 				template.close();
 				return emergency;
 			} catch (SQLException search_emergency_error) {
@@ -650,29 +682,31 @@ public class SQLManager implements Interface {
 			
 		}
 	 
-	 public String Search_specialty_by_id(Integer id) {
+	 public Specialty Search_specialty_by_id(Integer id) {
+		 Specialty spe = null;
 		 String name ="";
 			try {
-				String SQL_code = "SELECT name FROM specialty WHERE specialty_id LIKE ?";
+				String SQL_code = "SELECT * FROM specialty WHERE specialty_id LIKE ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, id);
 				ResultSet result_set = template.executeQuery();
 				while (result_set.next()) {
 					name = result_set.getString("name");
 				}
+				spe = new Specialty(id, name);
 				template.close();
-				return name;
-				
+				return spe;
 				
 			} catch (SQLException search_specialty_error) {
 				search_specialty_error.printStackTrace();
-				return null;
+				return spe;
 			}
 			
 		}
 	 
 	 
-	 public Integer Search_specialty_by_emergency_id(Integer id) {
+	 public Specialty Search_specialty_by_emergency_id(Integer id) {
+		 Specialty spe = null;
 		 Integer spe_id=-1;
 			try {
 				
@@ -683,19 +717,20 @@ public class SQLManager implements Interface {
 				while (result_set.next()) {
 					spe_id = result_set.getInt("specialty_id");
 				}
+				spe = Search_specialty_by_id(spe_id);
 				template.close();
-				return spe_id;
+				return spe;
 				
 				
-			} catch (SQLException search_speId_error) {
-				search_speId_error.printStackTrace();
-				return spe_id;
+			} catch (SQLException search_specialty_error) {
+				search_specialty_error.printStackTrace();
+				return spe;
 			}
 			
 		}
 	 
-	 public Integer Search_protocol_by_emergency_id(Integer id) {
-		 Integer prot_id=-1;
+	 public Protocol Search_protocol_by_emergency_id(Integer id) {
+		 Protocol prot = null; Integer prot_id=-1;
 			try {
 				
 				String SQL_code = "SELECT protocol_id FROM emergency WHERE emergency_id LIKE ?";
@@ -705,51 +740,56 @@ public class SQLManager implements Interface {
 				while (result_set.next()) {
 					prot_id = result_set.getInt("protocol_id");
 				}
+				
+				prot = Search_protocol_by_id(prot_id);
 				template.close();
-				return prot_id;
+				return prot;
 				
 				
 			} catch (SQLException search_protocol_error) {
 				search_protocol_error.printStackTrace();
-				return prot_id;
+				return prot;
 			}
 			
 		}
 	 
-	 public String Search_protocol_info_by_id(Integer id) {
-		 	String info="";
+	 public Protocol Search_protocol_by_id(Integer id) {
+		 	Protocol prot = null; String info="";
+		 	
 			try {
 				
-				String SQL_code = "SELECT info FROM protocol WHERE protocol_id LIKE ?";
+				String SQL_code = "SELECT * FROM protocol WHERE protocol_id LIKE ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, id);
 				ResultSet result_set = template.executeQuery();
 				while (result_set.next()) {
 					info = result_set.getString("info");
 				}
+				prot = new Protocol(id,info);
 				template.close();
-				return info;
+				return prot;
 				
 				
 			} catch (SQLException search_protocol_error) {
 				search_protocol_error.printStackTrace();
-				return info;
+				return prot;
 			}
 			
 		}
 	 
 	 public Disease Search_disease_by_id(Integer id) {
 		 Disease disease=null;
-		 String name="";
+		 String name="", list="";
 			try {
-				String SQL_code = "SELECT * FROM patient WHERE emergency_id LIKE ?";
+				String SQL_code = "SELECT * FROM disease WHERE specialty_id LIKE ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, id);
 				ResultSet result_set = template.executeQuery();
 				while (result_set.next()) {
 					name = result_set.getString("name");
+					list = result_set.getString("symptom_list");
 				}
-				disease = new Disease(id,name);
+				disease = new Disease(id,name,list);
 				template.close();
 				return disease;
 			} catch (SQLException search_disease_error) {
@@ -778,7 +818,6 @@ public class SQLManager implements Interface {
 			
 		}
 	 
-	 
 	 // -----------------------> UPDATE METHODS <---------------------------
 	 
 	 
@@ -798,16 +837,15 @@ public class SQLManager implements Interface {
 			}
 		}
 	 
-	 public boolean Update_emergency_info(String direction, int severity, Integer specialty_id, Integer location_id, int protocol_id, Integer emergency_id) {
+	 public boolean Update_emergency_info(int severity, Integer specialty_id, int protocol_id, Integer disease_id, Integer emergency_id) {
 		 try {
-				String SQL_code = "UPDATE emergency SET direction = ?, level = ?, specialty_id = ?, location_id = ?, protocol_id = ? WHERE emergency_id LIKE ?";
+				String SQL_code = "UPDATE emergency SET level = ?, specialty_id = ?, disease_id = ?, protocol_id = ? WHERE emergency_id LIKE ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
-				template.setString(1, direction);
-				template.setInt(2, severity);
-				template.setInt(3, specialty_id);
-				template.setInt(4, location_id);
-				template.setInt(5, protocol_id);
-				template.setInt(6, emergency_id);
+				template.setInt(1, severity);
+				template.setInt(2, specialty_id);
+				template.setInt(3, protocol_id);
+				template.setInt(4, disease_id);
+				template.setInt(5, emergency_id);
 				template.executeUpdate();
 				template.close();	
 				return true;
@@ -981,7 +1019,5 @@ public class SQLManager implements Interface {
 			return false;
 		}
 	}
-
-
 
 }

@@ -112,13 +112,16 @@ public class DataController implements Initializable {
 			
 						
 			Patient patient = new Patient(nameField.getText(),surnameField.getText(), genderField.getValue(), ageField.getValue(), val, val2, ref_number.toString());
+			
 			manager_object.Insert_new_patient(patient.getName(), patient.getSurname(), patient.getGender(), patient.getAge_range(), patient.getChronic(), 
 					patient.getDrugs(), patient.getReference_number(), emergency.getId());
 						
 			Location loc = manager_object.Search_vehicle_by_place_type(placeField.getValue().toString());
+						
+				emergency.setLocation(loc);
+				emergency.setDirection(locationField.getText());
+				
 			manager_object.Update_location_and_vehicle(locationField.getText(), loc.getId(), emergency.getId()); 
-			
-			System.out.println(emergency.toString());
 			
 			try {
 				SymptomsController.setValues(manager_object, emergency);

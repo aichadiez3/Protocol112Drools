@@ -26,20 +26,21 @@ public interface Interface {
 	public Integer Search_stored_user_by_username(String username);
 	public String Get_user_password (String username);
 	public Location Search_vehicle_by_place_type(String place);
-	public Integer Search_location_id_from_emergency(Integer urgency_id);
+	public Location Search_location_from_emergency(Integer urgency_id);
+	public Location Search_location_by_id(Integer id);
 	public Emergency Search_stored_emergency_by_code(Integer code);
 	public Integer Search_specialty_id_by_name(String name);
 	public Specialty Search_specialty_by_name(String name);
-	public String Search_specialty_by_id(Integer id);
-	public Integer Search_specialty_by_emergency_id(Integer id);
-	public Integer Search_protocol_by_emergency_id(Integer id);
-	public String Search_protocol_info_by_id(Integer id);
+	public Specialty Search_specialty_by_id(Integer id);
+	public Specialty Search_specialty_by_emergency_id(Integer id);
+	public Protocol Search_protocol_by_emergency_id(Integer id);
+	public Protocol Search_protocol_by_id(Integer id);
 	public Disease Search_disease_by_id(Integer id);
 	public String Search_symptom_by_id(Integer id);
 	
 	
 	public boolean Update_location_and_vehicle(String location, Integer location_id, Integer urgency_id);
-	public boolean Update_emergency_info(String direction, int severity, Integer specialty_id, Integer location_id, int protocol_id, Integer emergency_id);
+	public boolean Update_emergency_info(int severity, Integer specialty_id, int protocol_id, Integer disease_id, Integer emergency_id);
 	public Boolean Associate_symptom_list_to_disease(String symptom_list, Integer disease_id);
 
 	

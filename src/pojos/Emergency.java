@@ -1,10 +1,9 @@
 package pojos;
 
 import java.io.Serializable;
+
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 public class Emergency implements Serializable {
@@ -18,7 +17,6 @@ public class Emergency implements Serializable {
 	private String direction;
 	public Protocol protocol;
 	public Location location;
-	private Patient patient;
 	public Specialty specialty;
 	private Disease disease;
 	
@@ -44,12 +42,27 @@ public class Emergency implements Serializable {
 		this.severity = severity;
 	}
 	
+	
+	
+	public Emergency(Integer id, Integer code, String date, Integer severity, String direction, Protocol protocol,
+			Location location, Specialty specialty, Disease disease) {
+		super();
+		this.id = id;
+		this.code = code;
+		this.date = date;
+		this.severity = severity;
+		this.direction = direction;
+		this.protocol = protocol;
+		this.location = location;
+		this.specialty = specialty;
+		this.disease = disease;
+	}
+
 	public Emergency(Integer id, Patient patient) {
 		super();
 		this.id = id;
 		this.date = setDate();
 		this.code = setCode();
-		this.patient = patient;
 	}
 	
 	public String getDirection() {
@@ -122,14 +135,6 @@ public class Emergency implements Serializable {
 		return protocol;
 	}
 	
-	public Patient getPatient() {
-		return patient;
-	}
-
-	public void setPatient(Patient patient) {
-		this.patient = patient;
-	}
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -150,7 +155,7 @@ public class Emergency implements Serializable {
 	public String toString() {
 		return "Emergency [id=" + id + ", code=" + code + ", date=" + date + ", severity=" + severity + ", direction="
 				+ direction + ", protocol=" + protocol + ", location=" + location
-				+ ", patient=" + patient + ", specialty=" + specialty + ", disease=" + disease + "]";
+				+ ", specialty=" + specialty + ", disease=" + disease + "]";
 	}
 
 	

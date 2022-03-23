@@ -1,8 +1,6 @@
 package pojos;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Specialty implements Serializable{
@@ -11,7 +9,6 @@ public class Specialty implements Serializable{
 	
 	private Integer id;
 	private String name;
-	public List<Disease> disease_list = new ArrayList<Disease>();
 	
 	public Specialty(String name) {
 		super();
@@ -41,16 +38,7 @@ public class Specialty implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public List<Disease> getDisease_list() {
-		return disease_list;
-	}
-
-	public void setDisease_list(List<Disease> disease_list) {
-		
-		this.disease_list = disease_list;
-	}
-
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

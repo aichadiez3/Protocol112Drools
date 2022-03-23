@@ -18,6 +18,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import jdbc.SQLManager;
 import pojos.Patient;
+import pojos.Protocol;
+import pojos.Specialty;
+import pojos.Disease;
 import pojos.Emergency;
 
 public class ProtocolController implements Initializable {
@@ -89,15 +92,14 @@ public class ProtocolController implements Initializable {
 		code.setText(urgency.getCode().toString());
 		
 		
-		Integer spe_id = manager_object.Search_specialty_by_emergency_id(urgency.getId());
-		specialityLabel.setText(manager_object.Search_specialty_by_id(spe_id));
+		Specialty specialty = manager_object.Search_specialty_by_emergency_id(urgency.getId());
+		specialityLabel.setText(specialty.getName().toString());
 		
-		// HACER LO MISMO PERO CON DISEASE
+		Disease disease = manager_object.Search_disease_by_id(urgency.getDisease().getId());
+		diseaseLabel.setText(disease.getName().toString());
 		
-		Integer prot_id = manager_object.Search_protocol_by_emergency_id(urgency.getId());
-		System.out.println(prot_id);
-		System.out.println(urgency.toString());
-		protocolInfo.setText(manager_object.Search_protocol_info_by_id(prot_id));
+		Protocol protocol = manager_object.Search_protocol_by_emergency_id(urgency.getId());
+		protocolInfo.setText(protocol.getInfo().toString());
 	}
 	
 	

@@ -85,9 +85,11 @@ public class SymptomsController implements Initializable {
 		symptomsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // To select multiple items
 		selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		
+		
 		saveButton.setOnMouseClicked((MouseEvent event) -> {
 
-			urgency.setSpecialty(manager_object.Search_specialty_by_name(specialityField.getValue().toString()));
+			urgency.setSpecialty(manager_object.Search_specialty_by_name(specialityField.getValue()));
+			urgency.setDisease(manager_object.Search_disease_by_id(urgency.getSpecialty().getId()));
 			
 			KieServices ks = KieServices.Factory.get();
 			KieContainer kc = ks.getKieClasspathContainer();
@@ -151,7 +153,7 @@ public class SymptomsController implements Initializable {
 		ObservableList<String> diseases = FXCollections.observableArrayList();
 
 		for(Disease d : list) {
-			diseases.add(d.getDisease());
+			diseases.add(d.getName());
 		}
 		
 		diseaseField.setItems(diseases);

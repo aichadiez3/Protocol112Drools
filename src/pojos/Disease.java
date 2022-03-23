@@ -1,8 +1,6 @@
 package pojos;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Disease implements Serializable{
@@ -13,24 +11,24 @@ public class Disease implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private Integer id;
-	private String disease;
+	private String name;
 	private String symptomsList;
 	
-	public Disease(String disease) {
+	public Disease(String name) {
 		super();
-		this.disease = disease;
+		this.name = name;
 	}
 
-	public Disease(Integer id, String disease) {
+	public Disease(Integer id, String name) {
 		super();
 		this.id = id;
-		this.disease = disease;
+		this.name = name;
 	}
 	
-	public Disease(Integer id, String disease, String symptomList) {
+	public Disease(Integer id, String name, String symptomList) {
 		super();
 		this.id = id;
-		this.disease = disease;
+		this.name = name;
 		this.symptomsList = symptomList;
 	}
 	
@@ -42,12 +40,12 @@ public class Disease implements Serializable{
 		this.id = id;
 	}
 
-	public String getDisease() {
-		return disease;
+	public String getName() {
+		return name;
 	}
 
-	public void setDisease(String disease) {
-		this.disease = disease;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getSymptomsList() {
@@ -77,7 +75,7 @@ public class Disease implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Disease [id=" + id + ", disease=" + disease + ", symptomsList="
+		return "Disease [id=" + id + ", name=" + name + ", symptomsList="
 				+ symptomsList + "]";
 	}
 

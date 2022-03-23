@@ -95,9 +95,7 @@ public class MenuController implements Initializable{
 				Integer urgency_id = manager_object.Insert_new_emergency(urgency.getCode(), urgency.getDate());
 				urgency = manager_object.Search_stored_emergency_by_code(urgency.getCode());
 				DataController.setValues(manager_object, urgency);
-				
-				System.out.println(urgency);
-				
+								
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("DataView.fxml"));
 				Parent root = (Parent) loader.load();
 				this.data_controller = new DataController();
