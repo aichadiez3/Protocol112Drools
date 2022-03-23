@@ -125,13 +125,31 @@ public class SymptomsController implements Initializable {
 	 public static void execute(KieServices ks, KieContainer kc) {
 		 
 			System.out.println("BEFORE:\n" + urgency);
+			
+			KieSession ksession = null;
 		 
-		 KieSession ksession = kc.newKieSession("exampKS");
+		 if(urgency.getSpecialty().getName().equals("Cardiology")) {
+			 ksession = kc.newKieSession("cardiologyKS");
+			 
+		 } else if(urgency.getSpecialty().getName().equals("Oncology")) {
+			 ksession = kc.newKieSession("oncologyKS");
+			 
+		 } else if(urgency.getSpecialty().getName().equals("Toxicology")) {
+			 ksession = kc.newKieSession("toxicologyKS");
+			 
+		 } else if(urgency.getSpecialty().getName().equals("Traumatology")) {
+			 ksession = kc.newKieSession("traumatologyKS");
+			 
+		 }
+			
+		 
 				 
 		 ksession.insert(manager_object);
 		 ksession.insert(urgency);
 		 ksession.fireAllRules();
 		 ksession.dispose();
+		 
+		 System.out.println("AFTER:\n" + urgency);
 	 }
 	
 	

@@ -6,12 +6,20 @@
 	      <ksession name="symptomsKS"/>
 	  </kbase>
 	  
-	  <kbase name="examp" packages="rules.application">
-	      <ksession name="exampKS"/>
+	  <kbase name="cardioloogy" packages="rules.cardiology">
+	      <ksession name="cardiologyKS"/>
 	  </kbase>
 	  
-	  <kbase name="app" packages="rules.app">
-	      <ksession name="appKS"/>
+	  <kbase name="oncology" packages="rules.oncology">
+	      <ksession name="oncologyKS"/>
+	  </kbase>
+	  
+	  <kbase name="toxicology" packages="rules.toxicology">
+	      <ksession name="toxicologyKS"/>
+	  </kbase>
+	  
+	  <kbase name="traumatology" packages="rules.traumatology">
+	      <ksession name="traumatologyKS"/>
 	  </kbase>
     
 </kmodule>

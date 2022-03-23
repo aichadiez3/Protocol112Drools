@@ -19,7 +19,7 @@ public interface Interface {
 	public Disease Insert_new_disease(String name, Integer spe_id);
 	public Integer Insert_new_symptom(String name);
 	public Boolean Associate_symptom_to_specialty(Integer symp_id, Integer spe_id);
-	public Integer Insert_new_protocol(String info);
+	public Integer Insert_new_protocol(String info, String type);
 	
 	public Patient Search_stored_patient_by_id(Integer patient_id);
 	public Patient Search_stored_patient_by_emergency_id(Integer emergency_id);

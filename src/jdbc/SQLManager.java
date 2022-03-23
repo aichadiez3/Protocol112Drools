@@ -70,7 +70,7 @@ public class SQLManager implements Interface {
 			
 			Statement statement_2 = this.sqlite_connection.createStatement();
 			String table_2 = " CREATE TABLE protocol " + "(protocol_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-					+ " info TEXT default NULL)";
+					+ " info TEXT default NULL," +" type TEXT default NULL)";
 			statement_2.execute(table_2);
 			statement_2.close();
 			
@@ -158,15 +158,12 @@ public class SQLManager implements Interface {
 		Insert_new_specialty("Neurology");
 		Insert_new_specialty("Other");
 		
-		Insert_new_protocol("Take paracetamol");
-		Insert_new_protocol("Connect to oxygen supply");
+		Insert_new_protocol("Take paracetamol", "ADVICE");
+		Insert_new_protocol("Connect to oxygen supply", "SHIPMENT");
 		
 		// ADD HERE MORE PROTOCOLS FROM THE EXCEL
 		
 		protocol_list = new ArrayList<>(List_all_protocols());
-		
-		
-		
 		
 		
 		
@@ -230,7 +227,6 @@ public class SQLManager implements Interface {
 		cardio_disease_list = new ArrayList<>(List_all_diseases_by_specialty_id(spe_id));
 		
 		//Remove repetitions and associate symptoms to specialty
-		
 		Set<String> hashSet = new LinkedHashSet<>(names);
         ArrayList<String> cardio_list = new ArrayList<>(hashSet);
 				        
@@ -242,14 +238,8 @@ public class SQLManager implements Interface {
         		Integer index = Insert_new_symptom(cardio_list.get(it));
         		Associate_symptom_to_specialty(index, Search_specialty_id_by_name("Cardiology"));
         	}
-			
-			
 		}
 			
-		
-		
-		
-		
 	}
 	
 	
@@ -433,12 +423,13 @@ public class SQLManager implements Interface {
 	
 	
 	
-	public Integer Insert_new_protocol(String info) {
+	public Integer Insert_new_protocol(String info, String type) {
 		Integer protocol_id;
-		String table = "INSERT INTO protocol (info) " + "VALUES (?)";
+		String table = "INSERT INTO protocol (info, type) " + "VALUES (?,?)";
 		try {
 			PreparedStatement template = this.sqlite_connection.prepareStatement(table);
 			template.setString(1, info);
+			template.setString(2, type);
 			template.executeUpdate();
 			String SQL_code = "SELECT last_insert_rowid() AS protocol_id";
 			template = this.sqlite_connection.prepareStatement(SQL_code);
@@ -781,7 +772,7 @@ public class SQLManager implements Interface {
 		 Disease disease=null;
 		 String name="", list="";
 			try {
-				String SQL_code = "SELECT * FROM disease WHERE specialty_id LIKE ?";
+				String SQL_code = "SELECT * FROM disease WHERE disease_id LIKE ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, id);
 				ResultSet result_set = template.executeQuery();
@@ -997,7 +988,8 @@ public class SQLManager implements Interface {
 			while(rs.next()) {
 				Integer id = rs.getInt("protocol_id");
 				String info = rs.getString("info");
-				list.add(new Protocol(id, info));
+				String type = rs.getString("type");
+				list.add(new Protocol(id, info, Protocol.Type.valueOf(type)));
 			}
 			return list;
 		} catch (SQLException list_protocols_error) {
