@@ -31,6 +31,7 @@ import javafx.stage.Stage;
 import jdbc.SQLManager;
 import pojos.Disease;
 import pojos.Emergency;
+import pojos.Specialty;
 
 public class SymptomsController implements Initializable {
 
@@ -89,7 +90,13 @@ public class SymptomsController implements Initializable {
 		saveButton.setOnMouseClicked((MouseEvent event) -> {
 
 			urgency.setSpecialty(manager_object.Search_specialty_by_name(specialityField.getValue()));
-			urgency.setDisease(manager_object.Search_disease_by_id(urgency.getSpecialty().getId()));
+			
+			//ESTO ES LO QUE HAY Q CAMBIAR
+
+			Disease disease = manager_object.Search_disease_by_name(diseaseField.getValue().toString());
+			
+			System.out.println("disease: " + disease.toString());
+			urgency.setDisease(disease);			
 			
 			KieServices ks = KieServices.Factory.get();
 			KieContainer kc = ks.getKieClasspathContainer();
@@ -128,6 +135,7 @@ public class SymptomsController implements Initializable {
 			
 			KieSession ksession = null;
 		 
+			
 		 if(urgency.getSpecialty().getName().equals("Cardiology")) {
 			 ksession = kc.newKieSession("cardiologyKS");
 			 
@@ -142,14 +150,14 @@ public class SymptomsController implements Initializable {
 			 
 		 }
 			
-		 
+		
 				 
 		 ksession.insert(manager_object);
 		 ksession.insert(urgency);
 		 ksession.fireAllRules();
 		 ksession.dispose();
 		 
-		 System.out.println("AFTER:\n" + urgency);
+		// System.out.println("AFTER:\n" + urgency);
 	 }
 	
 	

@@ -36,6 +36,7 @@ public interface Interface {
 	public Protocol Search_protocol_by_emergency_id(Integer id);
 	public Protocol Search_protocol_by_id(Integer id);
 	public Disease Search_disease_by_id(Integer id);
+	public Integer Search_disease_by_emergency_id(Integer id);
 	public String Search_symptom_by_id(Integer id);
 	
 	

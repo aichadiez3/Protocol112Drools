@@ -21,11 +21,12 @@ public class Protocol implements Serializable{
 		this.info = info;
 	}
 	
-	public Protocol(Integer id, String info, Type protocolType) {
+	public Protocol(Integer id, String info, String protocolType) {
 		super();
 		this.id = id;
 		this.info = info;
-		this.protocolType = protocolType;
+		//System.out.println(protocolType);
+		this.protocolType = Type.valueOf(protocolType.toUpperCase());
 	}
 
 	public Integer getId() {

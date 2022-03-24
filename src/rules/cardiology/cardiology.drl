@@ -18,7 +18,8 @@ rule "cardiology_heart_attack"
 	    dbm : SQLManager(  )
 		u : Emergency (getDisease().getName().equals("Heart attack"))
 	then
-		u.setProtocol(dbm.getProtocol_list().get(1));
+		System.out.println("HOLA");
+		u.setProtocol(dbm.Search_protocol_by_id(1));
 		u.setSeverity(1);
 		dbm.Update_emergency_info(1, u.getSpecialty().getId(), 1, u.getDisease().getId(), u.getId());
 		System.out.println("AFTER:\n" + dbm.Search_stored_emergency_by_code(u.getCode()));
