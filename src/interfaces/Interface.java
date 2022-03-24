@@ -13,7 +13,7 @@ public interface Interface {
 	public void Insert_default_elements_toDB();
 	public Integer Insert_new_user(String user_name, String password, String charge);
 	public Integer Insert_new_patient(String name, String surname, String gender, String age, Boolean chronic, Boolean drugs, String reference_number, Integer urgency_id);
-	public Integer Insert_new_emergency(Integer code, String date);
+	public Integer Insert_new_emergency(Integer code, Integer severity, String date, String direction, Integer loc_id, Integer spe_id, Integer dis_id, Integer prot_id) ;
 	public Integer Insert_new_location(String type, String vehicle);
 	public Integer Insert_new_specialty(String name);
 	public Disease Insert_new_disease(String name, Integer spe_id);
@@ -39,9 +39,6 @@ public interface Interface {
 	public Integer Search_disease_by_emergency_id(Integer id);
 	public String Search_symptom_by_id(Integer id);
 	
-	
-	public boolean Update_location_and_vehicle(String location, Integer location_id, Integer urgency_id);
-	public boolean Update_emergency_info(int severity, Integer specialty_id, int protocol_id, Integer disease_id, Integer emergency_id);
 	public Boolean Associate_symptom_list_to_disease(String symptom_list, Integer disease_id);
 
 	

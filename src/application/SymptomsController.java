@@ -31,7 +31,7 @@ import javafx.stage.Stage;
 import jdbc.SQLManager;
 import pojos.Disease;
 import pojos.Emergency;
-import pojos.Specialty;
+import pojos.Patient;
 
 public class SymptomsController implements Initializable {
 
@@ -95,8 +95,9 @@ public class SymptomsController implements Initializable {
 
 			Disease disease = manager_object.Search_disease_by_name(diseaseField.getValue().toString());
 			
-			System.out.println("disease: " + disease.toString());
+			//System.out.println("disease: " + disease.toString());
 			urgency.setDisease(disease);			
+			
 			
 			KieServices ks = KieServices.Factory.get();
 			KieContainer kc = ks.getKieClasspathContainer();
@@ -156,8 +157,13 @@ public class SymptomsController implements Initializable {
 		 ksession.insert(urgency);
 		 ksession.fireAllRules();
 		 ksession.dispose();
+		
 		 
-		// System.out.println("AFTER:\n" + urgency);
+		manager_object.Insert_new_emergency(urgency.getCode(), urgency.getSeverity(), urgency.getDate(),urgency.getDirection(), urgency.getLocation().getId(), urgency.getSpecialty().getId(), urgency.getDisease().getId(), urgency.getProtocol().getId());
+		
+		Patient p = urgency.getPatient();
+		manager_object.Insert_new_patient(p.getName(), p.getSurname(), p.getGender(), p.getAge_range(), p.getChronic(), p.getDrugs(), p.getReference_number(), manager_object.Search_stored_emergency_by_code(urgency.getCode()).getId());
+		 
 	 }
 	
 	

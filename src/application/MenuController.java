@@ -92,8 +92,8 @@ public class MenuController implements Initializable{
 		new_case.setOnMouseClicked((MouseEvent event) -> {
 			try {
 				urgency = new Emergency();
-				Integer urgency_id = manager_object.Insert_new_emergency(urgency.getCode(), urgency.getDate());
-				urgency = manager_object.Search_stored_emergency_by_code(urgency.getCode());
+				//Integer urgency_id = manager_object.Insert_new_emergency(urgency.getCode(), urgency.getDate());
+				//urgency = manager_object.Search_stored_emergency_by_code(urgency.getCode());
 				DataController.setValues(manager_object, urgency);
 								
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("DataView.fxml"));
@@ -175,6 +175,7 @@ public class MenuController implements Initializable{
 			
 			
 			proceedButton.setOnMouseClicked((MouseEvent event2) -> {
+				
 				
 				urgency = manager_object.Search_stored_emergency_by_code(Integer.parseInt(codeField.getText()));
 				

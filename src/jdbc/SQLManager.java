@@ -301,12 +301,18 @@ public class SQLManager implements Interface {
 		
 	}
 	
-	public Integer Insert_new_emergency(Integer code, String date) {
+	public Integer Insert_new_emergency(Integer code, Integer severity, String date, String direction, Integer loc_id, Integer spe_id, Integer dis_id, Integer prot_id) {
 		try {
-			String table = "INSERT INTO emergency (code, register_date) " + " VALUES(?,?);";
+			String table = "INSERT INTO emergency (code, level, register_date, direction, location_id, specialty_id, disease_id, protocol_id) " + " VALUES(?,?,?,?,?,?,?,?);";
 			PreparedStatement template = this.sqlite_connection.prepareStatement(table);
 			template.setInt(1, code);
-			template.setString(2, date);
+			template.setInt(2, severity);
+			template.setString(3, date);
+			template.setString(4, direction);
+			template.setInt(5, loc_id);
+			template.setInt(6, spe_id);
+			template.setInt(7, dis_id);
+			template.setInt(8, prot_id);
 			template.executeUpdate();
 			
 			String SQL_code1 = "SELECT last_insert_rowid() AS emergency_id";
@@ -582,10 +588,9 @@ public class SQLManager implements Interface {
 				ResultSet result_set = template.executeQuery();
 				while(result_set.next()) {
 					type = result_set.getString("type");
-					//vehicle = result_set.getString("vehicle");
+					vehicle = result_set.getString("vehicle");
 				}
-				//loc = new Location(id,type,vehicle);
-				loc = new Location(id,type);
+				loc = new Location(id,type,vehicle);
 
 				template.close();
 				return loc;
@@ -748,7 +753,6 @@ public class SQLManager implements Interface {
 		 	Protocol prot = null; String info="", type="";
 		 	
 			try {
-				System.out.println(id);
 				String SQL_code = "SELECT * FROM protocol WHERE protocol_id = ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, id);
@@ -756,11 +760,8 @@ public class SQLManager implements Interface {
 				while (result_set.next()) { 	
 					info = result_set.getString("info");
 					type = result_set.getString("type");
-					System.out.println("info: " + info + " ; type: " + type);
 				}
 				prot = new Protocol(id,info,type);
-				//prot = new Protocol(id,info);
-
 				template.close();
 				return prot;
 				
@@ -858,40 +859,6 @@ public class SQLManager implements Interface {
 	 
 	 // -----------------------> UPDATE METHODS <---------------------------
 	 
-	 
-	 public boolean Update_location_and_vehicle(String location, Integer location_id, Integer emergency_id) {
-			try {
-				String SQL_code = "UPDATE emergency SET direction = ?, location_id = ? WHERE emergency_id LIKE ?";
-				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
-				template.setString(1, location);
-				template.setInt(2, location_id);
-				template.setInt(3, emergency_id);
-				template.executeUpdate();
-				template.close();	
-				return true;
-			} catch (SQLException update_location_error) {
-				update_location_error.printStackTrace();
-				return false;
-			}
-		}
-	 
-	 public boolean Update_emergency_info(int severity, Integer specialty_id, int protocol_id, Integer disease_id, Integer emergency_id) {
-		 try {
-				String SQL_code = "UPDATE emergency SET level = ?, specialty_id = ?, disease_id = ?, protocol_id = ? WHERE emergency_id LIKE ?";
-				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
-				template.setInt(1, severity);
-				template.setInt(2, specialty_id);
-				template.setInt(3, protocol_id);
-				template.setInt(4, disease_id);
-				template.setInt(5, emergency_id);
-				template.executeUpdate();
-				template.close();	
-				return true;
-			} catch (SQLException update_emergency_error) {
-				update_emergency_error.printStackTrace();
-				return false;
-			}
-	 }
 	 
 	 public Boolean Associate_symptom_list_to_disease(String symptom_list, Integer disease_id) {
 			

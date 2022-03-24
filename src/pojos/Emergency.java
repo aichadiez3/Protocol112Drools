@@ -19,6 +19,7 @@ public class Emergency implements Serializable {
 	public Location location;
 	public Specialty specialty;
 	private Disease disease;
+	private Patient patient;
 	
 	public Emergency() {
 		super();
@@ -135,6 +136,14 @@ public class Emergency implements Serializable {
 		return protocol;
 	}
 	
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -154,8 +163,8 @@ public class Emergency implements Serializable {
 	@Override
 	public String toString() {
 		return "Emergency [id=" + id + ", code=" + code + ", date=" + date + ", severity=" + severity + ", direction="
-				+ direction + ", protocol=" + protocol + ", location=" + location
-				+ ", specialty=" + specialty + ", disease=" + disease + "]";
+				+ direction + ", protocol=" + protocol + ", location=" + location + ", specialty=" + specialty
+				+ ", disease=" + disease + ", patient=" + patient + "]";
 	}
 
 	
