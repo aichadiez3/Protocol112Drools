@@ -164,6 +164,8 @@ public class SymptomsController implements Initializable {
 		Patient p = urgency.getPatient();
 		manager_object.Insert_new_patient(p.getName(), p.getSurname(), p.getGender(), p.getAge_range(), p.getChronic(), p.getDrugs(), p.getReference_number(), manager_object.Search_stored_emergency_by_code(urgency.getCode()).getId());
 		 
+		System.out.println("AFTER:\n" + urgency);
+		
 	 }
 	
 	

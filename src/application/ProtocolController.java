@@ -83,7 +83,8 @@ public class ProtocolController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
 		patient = urgency.getPatient();
-		//patient = manager_object.Search_stored_patient_by_emergency_id(urgency.getId());
+		
+		System.out.println(patient.toString());
 		
 		nameLabel.setText(patient.getName());
 		surnameLabel.setText(patient.getSurname());
@@ -93,13 +94,10 @@ public class ProtocolController implements Initializable {
 		code.setText(urgency.getCode().toString());
 		
 		
-		//Specialty specialty = manager_object.Search_specialty_by_emergency_id(urgency.getId());
 		specialityLabel.setText(urgency.getSpecialty().getName().toString());
 		
-		//Disease disease = manager_object.Search_disease_by_id(urgency.getDisease().getId());
 		diseaseLabel.setText(urgency.getDisease().getName().toString());
 		
-		//Protocol protocol = manager_object.Search_protocol_by_emergency_id(urgency.getId());
 		protocolInfo.setText(urgency.getProtocol().getInfo().toString());
 	}
 	
