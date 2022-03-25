@@ -449,10 +449,10 @@ public class SQLManager implements Interface {
 	
 	public Patient Search_stored_patient_by_id(Integer patient_id) {
 		try {
-			String SQL_code = "SELECT * FROM patient WHERE patient_id = ?";
-			PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
-			template.setInt(1, patient_id);
-			result_set = template.executeQuery();
+			String SQL_code3 = "SELECT * FROM patient WHERE patient_id = ?";
+			PreparedStatement template1 = this.sqlite_connection.prepareStatement(SQL_code3);
+			template1.setInt(1, patient_id);
+			result_set = template1.executeQuery();
 			Patient pat = new Patient();
 			pat.setId(result_set.getInt("patient_id"));
 			pat.setName(result_set.getString("name"));
@@ -462,7 +462,7 @@ public class SQLManager implements Interface {
 			pat.setChronic(result_set.getBoolean("chronic"));
 			pat.setDrugs(result_set.getBoolean("drugs"));
 			pat.setReference_number(result_set.getString("reference_number"));
-			template.close();
+			template1.close();
 			return pat;
 		} catch (SQLException search_patient_error) {
 			search_patient_error.printStackTrace();
@@ -473,13 +473,13 @@ public class SQLManager implements Interface {
 	
 	public Patient Search_stored_patient_by_emergency_id(Integer emergency_id) {
 		try {
-			String SQL_code = "SELECT * FROM patient WHERE emergency_id = ?";
-			PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
-			template.setInt(1, emergency_id);
-			result_set = template.executeQuery();
+			String SQL_code1 = "SELECT * FROM patient WHERE emergency_id = ?";
+			PreparedStatement template3 = this.sqlite_connection.prepareStatement(SQL_code1);
+			template3.setInt(1, emergency_id);
+			result_set = template3.executeQuery();
 			Patient pat = new Patient();
 			pat = Search_stored_patient_by_id(result_set.getInt("patient_id"));
-			template.close();
+			template3.close();
 			return pat;
 		} catch (SQLException search_patient_error) {
 			search_patient_error.printStackTrace();
@@ -603,10 +603,10 @@ public class SQLManager implements Interface {
 		Integer emergency_id=-1, level=-1, spe_id=-1, disease_id=-1, protocol_id=-1, location_id=-1;
 		String date = "", direction="";	
 			try {
-				String SQL_code = "SELECT * FROM emergency WHERE code = ?";
-				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
-				template.setInt(1, code);
-				result_set = template.executeQuery();
+				String SQL_code2 = "SELECT * FROM emergency WHERE code = ?";
+				PreparedStatement template2 = this.sqlite_connection.prepareStatement(SQL_code2);
+				template2.setInt(1, code);
+				result_set = template2.executeQuery();
 				
 			    while(result_set.next()) {
 			    	emergency_id = result_set.getInt("emergency_id");
@@ -624,7 +624,7 @@ public class SQLManager implements Interface {
 			    Protocol prot = Search_protocol_by_emergency_id(protocol_id);
 			    Patient patient = Search_stored_patient_by_emergency_id(emergency_id);
 				Emergency emergency = new Emergency(emergency_id, code, date, level, direction, prot, loc, spe, dis, patient);
-				template.close();
+				template2.close();
 				return emergency;
 			} catch (SQLException search_emergency_error) {
 				search_emergency_error.printStackTrace();
