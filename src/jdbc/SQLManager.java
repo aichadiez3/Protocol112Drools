@@ -21,6 +21,11 @@ public class SQLManager implements Interface {
 	private Connection sqlite_connection;
 	private static List<Protocol> protocol_list;
 	private static List<Disease> cardio_disease_list;
+	private static List<Disease> other_disease_list;
+	private static List<Disease> oncology_disease_list;
+	private static List<Disease> toxicology_disease_list;
+	private static List<Disease> neurology_disease_list;
+	private static List<Disease> traumatology_disease_list;
 	private ResultSet result_set;
 	
 	public SQLManager() {
@@ -151,8 +156,47 @@ public class SQLManager implements Interface {
 		Insert_new_specialty("Neurology");
 		Insert_new_specialty("Other");
 		
-		Insert_new_protocol("Take paracetamol", "ADVICE");
-		Insert_new_protocol("Connect to oxygen supply", "SHIPMENT");
+		Insert_new_protocol("Go to Urgencies unit for valoration", "SHIPMENT");
+		Insert_new_protocol("Connect to oxygen supply", "INPLACE");
+		//ONCOLOGY
+		Insert_new_protocol("Take paracetamol","ADVICE");
+		Insert_new_protocol("Connect to oxygen supply + Inject subcutaneous antipyretic medication","SHIPMENT");
+		Insert_new_protocol("Make appointment with doctor for further evaluation + Take medication and consider changes in status","ADVICE");
+		Insert_new_protocol("Connect catheter + intravenous antifluid and pain medicaments","INPLACE");
+		//TOXICOLOGY
+		Insert_new_protocol("Connect to oxygen supply + Control vomits + If the person begins to have seizures, administer first aid for these cases","SHIPMENT");
+		Insert_new_protocol("Examine and monitor the person's airway, breathing, and pulse. Start artificial respiration and CPR, if necessary","INPLACE");
+		Insert_new_protocol("If the person vomits, clear the airways + Wrap a piece of cloth around your fingers before cleaning your mouth and throat + DO NOT make the person vomit (only if indicated) + Keep the person comfortable. Turn onto her left side","ADVICE");
+		Insert_new_protocol("Apply cold to the affected zone + Quick transportation to hospital","SHIPMENT");
+		//TRAUMATOLOGY
+		Insert_new_protocol("Go to Urgencies unit for valoration + Possible surgery intervention or limb immobilization","ADVICE");
+		Insert_new_protocol("Keep the person comfortable + Turn her onto her left side and stay there while you get or wait for medical help","ADVICE");
+		Insert_new_protocol("Apply burn ointment and cold in the affected area","ADVICE");
+		//NEUROLOGY
+		Insert_new_protocol("Keep the person comfortable + Give water + Ensure access to fresh air + Try to make the person calm","ADVICE");
+		Insert_new_protocol("Make space among person + Clear hard or sharp objects + Don't try to stop the movements + Place the person on side to clear to airways","INPLACE");
+		Insert_new_protocol("The fastest way to hospital","SHIPMENT");
+		//TRAUMA2
+		Insert_new_protocol("Surgery intervention valoration if the affection is deep + Avoid touching the affected zone + Apply cold","SHIPMENT");
+		Insert_new_protocol("Do not move the limb until a professional arrives + Clean and cover wounds + Apply cold + Bone repositioning by experts + immobilization + Evaluation if possible surgery (arthroscopy or open surgery)","INPLACE");
+		// CARDIOLOGY
+		Insert_new_protocol("Measure constants +  Nitroglicerine + Reanimation","SHIPMENT");// heart attack
+		Insert_new_protocol("Measure constants +  Oxygen + Diuretics","SHIPMENT");// heart failure severe
+		Insert_new_protocol("Measure constants +  Oxygen","INPLACE");// heart failure light
+		Insert_new_protocol("Tension measure + calm the pacient + hipotensive drug","INPLACE");// hipertensive crisis
+		Insert_new_protocol("Head elevation + ECG + Tension measure + Neuroprotector drugs","SHIPMENT");// ictus
+		Insert_new_protocol("Leg lift + Hydration","ADVICE");// syncope
+		Insert_new_protocol("Leg lift + Hydration + ECG + Recommend to make appointment with doctor for further evaluation","INPLACE"); // syncope old people
+		//TRAUMA3
+		Insert_new_protocol("Apply cold to the affected zone + ointment if needed + and avoid infecttions","ADVICE");
+		Insert_new_protocol("Do not move the limb + clean and cover wounds + cold +repositioning the bone by experts + anti-inflammatories","ADVICE");
+		Insert_new_protocol("Rest + Elevation of the limb + gentle stretching + cold + bandage + compression","SHIPMENT");
+		Insert_new_protocol("Do not move the limb + clean and cover wounds + cold + repositioning of the bone by experts + immobilization and rehabilitation + anti-inflammatories + May need surgery (Arthoscopy or open surgery) + possible use of splint","SHIPMENT");
+		Insert_new_protocol("Immobilization  + casting","SHIPMENT");
+		Insert_new_protocol("Urgently transfer to the nearest hospital + avoid suffocation + assisted respiration if needed + surgery","SHIPMENT");
+		Insert_new_protocol("Immobilization of the area + oxygenation maintenance + surgical stabilization + symptomatic care + prevent secondary injuries + maintain high blood pressure + corticosteroids + analgesics","SHIPMENT");
+		Insert_new_protocol("Direct compression + when bleeding stops bandage + elevate affected part + tourniquet + cauterization of the wound","SHIPMENT");
+		Insert_new_protocol("Apply cold + see if the abdomen is rigid or tender + stop bleeding + transfer quickly to the nearest hospital + surgery","SHIPMENT");
 		
 		// ADD HERE MORE PROTOCOLS FROM THE EXCEL
 		
@@ -164,8 +208,6 @@ public class SQLManager implements Interface {
 		List<String> saver = new ArrayList<>(); 
 		
 		// --------> CARDIOLOGY
-		
-		
 		List<String> cardio_symps_1 = Arrays.asList("Chest pressure/Fatigue/Pain extends to the left arm/Disnea/Cold sweat/|".split("/"));
 		List<String> cardio_symps_2 = Arrays.asList("Phlegm/Swelling/Faints/Fatigue/Heart palpitations/|".split("/"));
 		List<String> cardio_symps_3 = Arrays.asList("Swelling/Faints/Fatigue/|".split("/"));
@@ -183,35 +225,27 @@ public class SQLManager implements Interface {
 		List<Symptom> cardio_symp_list = new ArrayList<>();
 		int m=0;
 		for(String n : names) {
-			
 			if(m < names.size()) {
 				cardio_symp_list.add(new Symptom(m, n));
 				m++;
 			} else {
 				break;
-			}
-			
+			}	
 		}
 		
 		// Assosiate to disease
 		
 		List<String> cardio_diseases = Arrays.asList("Heart attack,Heart failure,Hipertensive crisis,Ictus,Syncope".split(","));
-		
 		Integer i = 0, spe_id = Search_specialty_id_by_name("Cardiology");
 		
 		for (String d: cardio_diseases) {
-			
 			Disease disease = Insert_new_disease(d, spe_id);
-			
 			if(cardio_symp_list.get(i).toString().contains("|")) {
 				i++;
 			} 
-			
 			while(!cardio_symp_list.get(i).toString().contains("|")) {
-
 				saver.add(cardio_symp_list.get(i).getSymptom());
-				i++;
-				
+				i++;	
 			}
 			
 			Associate_symptom_list_to_disease(saver.toString(), Search_disease_by_id(disease.getId()).getId());
@@ -225,7 +259,6 @@ public class SQLManager implements Interface {
         ArrayList<String> cardio_list = new ArrayList<>(hashSet);
 				        
         for(int it = 0; it < cardio_list.size(); it++) {
-        	
         	if (cardio_list.get(it).equals("|")) {
         		cardio_list.remove(it);
         	} else {
@@ -235,7 +268,72 @@ public class SQLManager implements Interface {
 		}
 	
 	
+	
+	
+	// OTHER
+	List<String> other_symps_1 = Arrays.asList("Fever/Fatigue/Sweating/|".split("/"));
+	List<String> other_symps_2 = Arrays.asList("Fever/Pain/Fatigue/Sweating/|".split("/"));
+	
+	names.clear();
+	names.addAll(other_symps_1);
+	names.addAll(other_symps_2);
+
+	List<Symptom> other_symp_list = new ArrayList<>();
+	m=0;
+	for(String n : names) {
+		if(m < names.size()) {
+			other_symp_list.add(new Symptom(m, n));
+			m++;
+		} else {
+			break;
+		}
 	}
+	
+	// Assosiate to disease
+	
+	List<String> other_diseases = Arrays.asList("Unknown (not urgent),Unknown (urgent)".split(","));
+	i=0; spe_id = Search_specialty_id_by_name("Other");
+	
+	for (String d: other_diseases) {
+		Disease disease = Insert_new_disease(d, spe_id);
+		if(other_symp_list.get(i).toString().contains("|")) {
+			i++;
+		} 
+		
+		while(!other_symp_list.get(i).toString().contains("|")) {
+			saver.add(other_symp_list.get(i).getSymptom());
+			i++;
+		}
+		Associate_symptom_list_to_disease(saver.toString(), Search_disease_by_id(disease.getId()).getId());
+		saver.clear();
+	}
+	
+	other_disease_list = new ArrayList<>(List_all_diseases_by_specialty_id(spe_id));
+	
+	//Remove repetitions and associate symptoms to specialty
+	hashSet.clear();
+	hashSet = new LinkedHashSet<>(names);
+	ArrayList<String> other_list = new ArrayList<>(hashSet);
+			        
+	for(int it = 0; it < other_list.size(); it++) {
+		if (other_list.get(it).equals("|")) {
+			other_list.remove(it);
+		} else {
+			Integer index = Insert_new_symptom(other_list.get(it));
+			Associate_symptom_to_specialty(index, Search_specialty_id_by_name("Other"));
+		}
+	}
+	
+	
+	}
+	
+	// ONCOLOGY
+	
+	// NEUROLOGY
+	
+	// TOXICOLOGY
+	
+	// TRAUMATOLOGY
 	
 	
 	 // -----------------------> INSERT METHODS <---------------------------
@@ -454,7 +552,7 @@ public class SQLManager implements Interface {
 			template1.setInt(1, patient_id);
 			result_set = template1.executeQuery();
 			Patient pat = new Patient();
-			pat.setId(result_set.getInt("patient_id"));
+			pat.setId(patient_id);
 			pat.setName(result_set.getString("name"));
 			pat.setSurname(result_set.getString("surname"));
 			pat.setGender(result_set.getString("gender"));
@@ -473,12 +571,17 @@ public class SQLManager implements Interface {
 	
 	public Patient Search_stored_patient_by_emergency_id(Integer emergency_id) {
 		try {
-			String SQL_code1 = "SELECT * FROM patient WHERE emergency_id = ?";
+			Integer id = -1;
+			String SQL_code1 = "SELECT patient_id FROM patient WHERE emergency_id = ?";
 			PreparedStatement template3 = this.sqlite_connection.prepareStatement(SQL_code1);
 			template3.setInt(1, emergency_id);
 			result_set = template3.executeQuery();
+			while(result_set.next()) {
+				id = result_set.getInt("patient_id");
+			}
+			
 			Patient pat = new Patient();
-			pat = Search_stored_patient_by_id(result_set.getInt("patient_id"));
+			pat = Search_stored_patient_by_id(id);
 			template3.close();
 			return pat;
 		} catch (SQLException search_patient_error) {

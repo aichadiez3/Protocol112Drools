@@ -61,6 +61,35 @@
                   <Image url="@icons/exit.jpg" />
                </image>
             </ImageView>
+            <Pane layoutX="392.0" layoutY="98.0" prefHeight="251.0" prefWidth="260.0" styleClass="bubble-pane-layout" stylesheets="@dark-theme.css" visible="false">
+               <children>
+                  <Label layoutX="21.0" layoutY="117.0" prefHeight="69.0" prefWidth="226.0" style="-fx-font-style: italic;" styleClass="text-style" text="Has this emergency be attended? Do you want to remove it from the list?" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font name="System Italic" size="12.0" />
+                     </font>
+                  </Label>
+                  <Group layoutX="54.0" layoutY="186.0">
+                     <children>
+                        <ImageView fitHeight="60.0" fitWidth="49.0" layoutX="111.0" preserveRatio="true">
+                           <image>
+                              <Image url="@icons/small_arrow.png" />
+                           </image>
+                        </ImageView>
+                        <Label layoutY="12.0" prefHeight="20.0" prefWidth="124.0" styleClass="text-style" text="Delete emergency" />
+                     </children>
+                  </Group>
+                  <ImageView fitHeight="46.0" fitWidth="50.0" layoutX="14.0" layoutY="20.0" onMouseClicked="#return_window" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/back.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="106.0" fitWidth="111.0" layoutX="79.0" layoutY="24.0" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/submitted.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
          </children>
       </Pane>
       <Pane fx:id="codePanel" layoutX="82.0" layoutY="62.0" prefHeight="342.0" prefWidth="521.0" styleClass="bubble-pane-layout" stylesheets="@dark-theme.css" visible="false">

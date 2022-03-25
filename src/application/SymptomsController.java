@@ -145,6 +145,11 @@ public class SymptomsController implements Initializable {
 		 } else if(urgency.getSpecialty().getName().equals("Traumatology")) {
 			 ksession = kc.newKieSession("traumatologyKS");
 			 
+		 } else if(urgency.getSpecialty().getName().equals("Neurology")) {
+			 ksession = kc.newKieSession("neurologyKS");
+			 
+		 } else if(urgency.getSpecialty().getName().equals("Other")){
+			 ksession = kc.newKieSession("othersKS");
 		 }
 			
 		

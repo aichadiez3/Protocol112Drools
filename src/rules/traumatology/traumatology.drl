@@ -3,24 +3,16 @@ package rules.traumatology;
 
 //list any import classes here.
 import pojos.Emergency;
-import pojos.Location;
-import pojos.Protocol;
 import jdbc.SQLManager;
 
-//declare any global variables here
 
-
-
-
-rule "cardiology_heart_attack"
+rule ""
 	dialect "java"
 	when
 	    dbm : SQLManager(  )
-		u : Emergency (getDisease().getName().equals("Heart attack"))
+		u : Emergency (getDisease().getName().equals(""))
 	then
-		u.setProtocol(dbm.getProtocol_list().get(1));
-		u.setSeverity(1);
-		dbm.Update_emergency_info(1, u.getSpecialty().getId(), 1, u.getDisease().getId(), u.getId());
-		System.out.println("AFTER:\n" + dbm.Search_stored_emergency_by_code(u.getCode()));
+		u.setProtocol(dbm.Search_protocol_by_id(2));
+		u.setSeverity(5);
 end
 

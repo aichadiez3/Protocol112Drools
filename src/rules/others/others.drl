@@ -1,0 +1,31 @@
+//created on: 14 mar. 2022
+package rules.others;
+
+//list any import classes here.
+import pojos.Emergency;
+import jdbc.SQLManager;
+
+//declare any global variables here
+
+
+
+
+rule "other_unknown_light"
+	dialect "java"
+	when
+	    dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Unknown (not urgent)"))
+	then
+		u.setProtocol(dbm.Search_protocol_by_id(2));
+		u.setSeverity(5);
+end
+
+rule "other_unknown_severe"
+dialect "java"
+	when
+	    dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Unknown (not urgent)"))
+	then
+		u.setProtocol(dbm.Search_protocol_by_id(1));
+		u.setSeverity(4);
+end

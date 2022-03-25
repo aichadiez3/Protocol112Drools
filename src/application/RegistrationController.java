@@ -176,8 +176,6 @@ public class RegistrationController implements Initializable {
 	 * Password-Based Encryption using Salt and Base64:
 The password-based encryption technique uses plain text passwords and salt values to generate a hash value. And the hash value is then encoded as a Base64 string. 
 Salt value contains random data generated using an instance of Random class from java.util package.
-
-The following program demonstrates password encryption using salt and base64.
 	 *
 	 * */
 	

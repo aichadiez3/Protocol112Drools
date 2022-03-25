@@ -21,6 +21,14 @@
 	  <kbase name="traumatology" packages="rules.traumatology">
 	      <ksession name="traumatologyKS"/>
 	  </kbase>
+	  
+	  <kbase name="neurology" packages="rules.neurology">
+	      <ksession name="neurologyKS"/>
+	  </kbase>
+	  
+	  <kbase name="other" packages="rules.others">
+	      <ksession name="othersKS"/>
+	  </kbase>
     
 </kmodule>
 

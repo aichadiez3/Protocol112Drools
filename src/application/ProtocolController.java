@@ -94,7 +94,8 @@ public class ProtocolController implements Initializable {
 		
 		specialityLabel.setText(urgency.getSpecialty().getName().toString());
 		diseaseLabel.setText(urgency.getDisease().getName().toString());
-		protocolInfo.setText(urgency.getProtocol().getInfo().toString());
+		
+		protocolInfo.setText("Location: "+ urgency.getDirection().toString() + "\n\n" + urgency.getProtocol().getInfo().toString());
 		typeLabel.setText(urgency.getProtocol().getProtocolType().toString());
 	}
 	
