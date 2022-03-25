@@ -26,12 +26,11 @@ public class SQLManager implements Interface {
 	public SQLManager() {
 		super();
 		Connect();
-		 Boolean tables = Create_tables();
-	        if(tables==true) {
-	        	Insert_default_elements_toDB();
-	        }
+		Boolean tables = Create_tables();
+	       if(tables==true) {
+	    	   Insert_default_elements_toDB();
+	       }
 	}
-	
 	
 	public List<Protocol> getProtocol_list() {
 		return protocol_list;
@@ -45,7 +44,7 @@ public class SQLManager implements Interface {
 		try {
 			Class.forName("org.sqlite.JDBC");
 			this.sqlite_connection = DriverManager.getConnection("jdbc:sqlite:./db/database.db");
-			this.sqlite_connection.createStatement().execute("PRAGMA foreign_keys=ON");
+			this.sqlite_connection.createStatement().execute("PRAGMA foreign_keys=ON");			
 			return true;
 		} catch (ClassNotFoundException | SQLException connection_error) {
 			connection_error.printStackTrace();
@@ -115,25 +114,18 @@ public class SQLManager implements Interface {
 			statement_7.close();
 			
 			Statement statement_8 = this.sqlite_connection.createStatement();
-			String table_8 = "CREATE TABLE user_emergency " + " (user_id INTEGER REFERENCES user(user_id), " 
-					+ "emergency_id INTEGER REFERENCES emergency(emergency_id), "
-					+ "PRIMARY KEY (user_id, emergency_id))";
+			String table_8 = "CREATE TABLE disease_symptom " + " (disease_id INTEGER REFERENCES disease(disease_id), " 
+					+ "symptom_id INTEGER REFERENCES symptom(symptom_id), "
+					+ "PRIMARY KEY (disease_id, symptom_id))";
 			statement_8.execute(table_8);
 			statement_8.close();
 			
 			Statement statement_9 = this.sqlite_connection.createStatement();
-			String table_9 = "CREATE TABLE disease_symptom " + " (disease_id INTEGER REFERENCES disease(disease_id), " 
-					+ "symptom_id INTEGER REFERENCES symptom(symptom_id), "
-					+ "PRIMARY KEY (disease_id, symptom_id))";
-			statement_9.execute(table_9);
-			statement_9.close();
-			
-			Statement statement_10 = this.sqlite_connection.createStatement();
-			String table_10 = "CREATE TABLE specialty_symptom " + " (specialty_id INTEGER REFERENCES specialty(specialty_id), " 
+			String table_9 = "CREATE TABLE specialty_symptom " + " (specialty_id INTEGER REFERENCES specialty(specialty_id), " 
 					+ "symptom_id INTEGER REFERENCES symptom(symptom_id), "
 					+ "PRIMARY KEY (specialty_id, symptom_id))";
-			statement_10.execute(table_10);
-			statement_10.close();
+			statement_9.execute(table_9);
+			statement_9.close();
 		
 			
 			return true;
@@ -167,6 +159,7 @@ public class SQLManager implements Interface {
 		protocol_list = new ArrayList<>(List_all_protocols());
 		
 		
+	
 		
 		List<String> saver = new ArrayList<>(); 
 		
@@ -240,7 +233,8 @@ public class SQLManager implements Interface {
         		Associate_symptom_to_specialty(index, Search_specialty_id_by_name("Cardiology"));
         	}
 		}
-			
+	
+	
 	}
 	
 	
