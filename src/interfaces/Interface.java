@@ -11,7 +11,7 @@ public interface Interface {
 	public boolean Create_tables();
 	
 	public void Insert_default_elements_toDB();
-	public Integer Insert_new_user(String user_name, String password, String charge);
+	public Integer Insert_new_user(String user_name, String password, String salt, String charge);
 	public Integer Insert_new_patient(String name, String surname, String gender, String age, Boolean chronic, Boolean drugs, String reference_number, Integer urgency_id);
 	public Integer Insert_new_emergency(Integer code, Integer severity, String date, String direction, Integer loc_id, Integer spe_id, Integer dis_id, Integer prot_id) ;
 	public Integer Insert_new_location(String type, String vehicle);
@@ -24,7 +24,7 @@ public interface Interface {
 	public Patient Search_stored_patient_by_id(Integer patient_id);
 	public Patient Search_stored_patient_by_emergency_id(Integer emergency_id);
 	public Integer Search_stored_user_by_username(String username);
-	public String Get_user_password (String username);
+	public List<String> Get_user_password (String username);
 	public Location Search_vehicle_by_place_type(String place);
 	public Location Search_location_from_emergency(Integer urgency_id);
 	public Location Search_location_by_id(Integer id);

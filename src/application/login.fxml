@@ -35,14 +35,19 @@
             </Pane>
             <Group fx:id="warning" layoutX="143.0" layoutY="370.0">
                <children>
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff69694c" height="36.0" stroke="#ff1f1fb5" strokeType="INSIDE" width="370.0" />
-                  <Label fx:id="warningLabel" layoutX="43.0" layoutY="8.0" text="ERROR! Username or password doesn't exist" textFill="#ff0000c7">
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff00007e" height="36.0" stroke="#ff1f1fb5" strokeType="INSIDE" width="370.0" />
+                  <Label fx:id="warningLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="43.0" layoutY="7.0" text="ERROR! Username or password doesn't exist" textAlignment="CENTER" textFill="#ffffffc7" wrapText="true">
                      <font>
                         <Font name="System Italic" size="15.0" />
                      </font>
                   </Label>
                </children>
             </Group>
+            <ImageView fitHeight="34.0" fitWidth="50.0" layoutX="613.0" layoutY="8.0" onMouseClicked="#close_window" preserveRatio="true">
+               <image>
+                  <Image url="@icons/transparent_cross.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
    </children>

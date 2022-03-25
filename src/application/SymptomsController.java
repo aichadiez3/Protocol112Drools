@@ -91,11 +91,7 @@ public class SymptomsController implements Initializable {
 
 			urgency.setSpecialty(manager_object.Search_specialty_by_name(specialityField.getValue()));
 			
-			//ESTO ES LO QUE HAY Q CAMBIAR
-
 			Disease disease = manager_object.Search_disease_by_name(diseaseField.getValue().toString());
-			
-			//System.out.println("disease: " + disease.toString());
 			urgency.setDisease(disease);			
 			
 			

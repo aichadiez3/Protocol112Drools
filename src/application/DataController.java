@@ -114,10 +114,6 @@ public class DataController implements Initializable {
 			Patient patient = new Patient(nameField.getText(),surnameField.getText(), genderField.getValue(), ageField.getValue(), val, val2, ref_number.toString());
 			
 			
-			/*manager_object.Insert_new_patient(patient.getName(), patient.getSurname(), patient.getGender(), patient.getAge_range(), patient.getChronic(), 
-					patient.getDrugs(), patient.getReference_number(), emergency.getId());
-						
-			*/
 			Location loc = manager_object.Search_vehicle_by_place_type(placeField.getValue().toString());
 						
 				emergency.setLocation(loc);
@@ -143,7 +139,7 @@ public class DataController implements Initializable {
 	@FXML
     void open_new_case(MouseEvent event) {
 		try {
-			MenuController.setValues(manager_object, null);
+			MenuController.setValues(manager_object);
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("OptionsView.fxml"));
 			Parent root = (Parent) loader.load();
 			this.menu_controller = new MenuController();

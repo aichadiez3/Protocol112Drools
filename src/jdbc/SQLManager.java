@@ -21,6 +21,7 @@ public class SQLManager implements Interface {
 	private Connection sqlite_connection;
 	private static List<Protocol> protocol_list;
 	private static List<Disease> cardio_disease_list;
+	private ResultSet result_set;
 	
 	public SQLManager() {
 		super();
@@ -57,7 +58,7 @@ public class SQLManager implements Interface {
 		try {
 			Statement statement_0 = this.sqlite_connection.createStatement();
 			String table_0 = " CREATE TABLE user " + "(user_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-			        + " username TEXT NOT NULL UNIQUE, " + " password TEXT NOT NULL, "
+			        + " username TEXT NOT NULL UNIQUE, " + " password TEXT NOT NULL, " + " salt_value TEXT NOT NULL, "
 					+ " charge TEXT NOT NULL)";
 			statement_0.execute(table_0);
 			statement_0.close();
@@ -246,29 +247,26 @@ public class SQLManager implements Interface {
 	 // -----------------------> INSERT METHODS <---------------------------
 
 	
-	public Integer Insert_new_user(String user_name, String password, String charge) {
+	public Integer Insert_new_user(String username, String password, String salt, String charge) {
 		try {
-			String table = "INSERT INTO user (username, password, charge) " + " VALUES(?,?,?);";
+			String table = "INSERT INTO user (username, password, salt_value, charge) " + " VALUES(?,?,?,?);";
 			PreparedStatement template = this.sqlite_connection.prepareStatement(table);
-			template.setString(1, user_name);
+			template.setString(1, username);
 			template.setString(2, password);
-			template.setString(3, charge);
+			template.setString(3, salt);
+			template.setString(4, charge);
 			template.executeUpdate();
 			
-			String SQL_code = "SELECT * FROM user WHERE username = ?";
+			
+			String SQL_code = "SELECT last_insert_rowid() AS user_id";
 			template = this.sqlite_connection.prepareStatement(SQL_code);
-			template.setString(1, user_name);
-			ResultSet result_set = template.executeQuery();
-			User user = new User();
-		    user.setUserName(result_set.getString("username"));
-		    user.setPassword(result_set.getString("password"));
-		    user.setCharge(result_set.getString("charge"));
-		    user.setUserId(result_set.getInt("user_id"));
-		    template.close();
-		    return user.getUserId();
+			result_set = template.executeQuery();
+			Integer user_id = result_set.getInt("user_id");
+			template.close();
+		    return user_id;
 		} catch (SQLException insert_user_error) {
 			insert_user_error.printStackTrace();
-			return null;
+			return -1;
 		}
 	}
 	
@@ -288,7 +286,7 @@ public class SQLManager implements Interface {
 			
 			String SQL_code1 = "SELECT last_insert_rowid() AS patient_id";
 			template = this.sqlite_connection.prepareStatement(SQL_code1);
-			ResultSet result_set = template.executeQuery();
+			result_set = template.executeQuery();
 			Integer patient_id = result_set.getInt("patient_id");
 			template.close();
 			
@@ -317,7 +315,7 @@ public class SQLManager implements Interface {
 			
 			String SQL_code1 = "SELECT last_insert_rowid() AS emergency_id";
 			template = this.sqlite_connection.prepareStatement(SQL_code1);
-			ResultSet result_set = template.executeQuery();
+			result_set = template.executeQuery();
 			Integer emergency_id = result_set.getInt("emergency_id");
 			Emergency emerg = new Emergency(emergency_id);
 			template.close();
@@ -341,7 +339,7 @@ public class SQLManager implements Interface {
 			template.executeUpdate();
 			String SQL_code = "SELECT last_insert_rowid() AS location_id";
 			template = this.sqlite_connection.prepareStatement(SQL_code);
-			ResultSet result_set = template.executeQuery();
+			result_set = template.executeQuery();
 			where_id = result_set.getInt("location_id");
 			template.close();
 			return where_id;
@@ -361,7 +359,7 @@ public class SQLManager implements Interface {
 			template.executeUpdate();
 			String SQL_code = "SELECT last_insert_rowid() AS specialty_id";
 			template = this.sqlite_connection.prepareStatement(SQL_code);
-			ResultSet result_set = template.executeQuery();
+			result_set = template.executeQuery();
 			specialty_id = result_set.getInt("specialty_id");
 			template.close();
 			return specialty_id;
@@ -380,7 +378,7 @@ public class SQLManager implements Interface {
 			template.executeUpdate();
 			String SQL_code = "SELECT last_insert_rowid() AS disease_id";
 			template = this.sqlite_connection.prepareStatement(SQL_code);
-			ResultSet result_set = template.executeQuery();
+			result_set = template.executeQuery();
 			Integer disease_id = result_set.getInt("disease_id");
 			Disease disease = Search_disease_by_id(disease_id);
 			template.close();
@@ -401,7 +399,7 @@ public class SQLManager implements Interface {
 			template.executeUpdate();
 			String SQL_code = "SELECT last_insert_rowid() AS symptom_id";
 			template = this.sqlite_connection.prepareStatement(SQL_code);
-			ResultSet result_set = template.executeQuery();
+			result_set = template.executeQuery();
 			symptom_id = result_set.getInt("symptom_id");
 			template.close();
 			return symptom_id;
@@ -439,7 +437,7 @@ public class SQLManager implements Interface {
 			template.executeUpdate();
 			String SQL_code = "SELECT last_insert_rowid() AS protocol_id";
 			template = this.sqlite_connection.prepareStatement(SQL_code);
-			ResultSet result_set = template.executeQuery();
+			result_set = template.executeQuery();
 			protocol_id = result_set.getInt("protocol_id");
 			template.close();
 			return protocol_id;
@@ -457,11 +455,12 @@ public class SQLManager implements Interface {
 	
 	public Patient Search_stored_patient_by_id(Integer patient_id) {
 		try {
-			String SQL_code = "SELECT * FROM patient WHERE patient_id LIKE ?";
+			String SQL_code = "SELECT * FROM patient WHERE patient_id = ?";
 			PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 			template.setInt(1, patient_id);
-			ResultSet result_set = template.executeQuery();
-			Patient pat = new Patient(patient_id);
+			result_set = template.executeQuery();
+			Patient pat = new Patient();
+			pat.setId(result_set.getInt("patient_id"));
 			pat.setName(result_set.getString("name"));
 			pat.setSurname(result_set.getString("surname"));
 			pat.setGender(result_set.getString("gender"));
@@ -480,10 +479,10 @@ public class SQLManager implements Interface {
 	
 	public Patient Search_stored_patient_by_emergency_id(Integer emergency_id) {
 		try {
-			String SQL_code = "SELECT * FROM patient WHERE emergency_id LIKE ?";
+			String SQL_code = "SELECT * FROM patient WHERE emergency_id = ?";
 			PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 			template.setInt(1, emergency_id);
-			ResultSet result_set = template.executeQuery();
+			result_set = template.executeQuery();
 			Patient pat = new Patient();
 			pat = Search_stored_patient_by_id(result_set.getInt("patient_id"));
 			template.close();
@@ -502,7 +501,7 @@ public class SQLManager implements Interface {
 			String SQL_code = "SELECT user_id FROM user WHERE username LIKE ?";
 			PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 			template.setString(1, username);
-			ResultSet result_set = template.executeQuery();
+			result_set = template.executeQuery();
 			
 		    while(result_set.next()) {
 		    	user_id = result_set.getInt("user_id");
@@ -516,16 +515,22 @@ public class SQLManager implements Interface {
 		
 	}
 	
-	 public String Get_user_password (String username) {
-	    	String pass="ERROR! Password doesn't match";
+	 public List<String> Get_user_password (String username) {
+	    	String password="", salt="";
+	    	List<String> pass = new ArrayList<String>();
 			try {
-				String SQL_code = "SELECT password FROM user WHERE username LIKE ?";
+				String SQL_code = "SELECT * FROM user WHERE username LIKE ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setString(1, username);
-				ResultSet result_set = template.executeQuery();
+				result_set = template.executeQuery();
 				while (result_set.next()) {
-					pass = result_set.getString("password");
+					password = result_set.getString("password");
+					salt = result_set.getString("salt_value");
+					
 				}
+				pass.add(password);
+				pass.add(salt);
+				
 				template.close();
 				return pass;
 				
@@ -546,7 +551,7 @@ public class SQLManager implements Interface {
 				String SQL_code = "SELECT * FROM location WHERE type LIKE ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setString(1, place);
-				ResultSet result_set = template.executeQuery();
+				result_set = template.executeQuery();
 				while(result_set.next()) {
 					vehicle = result_set.getString("vehicle");
 					loc_id = result_set.getInt("location_id");
@@ -563,10 +568,10 @@ public class SQLManager implements Interface {
 	 public Location Search_location_from_emergency(Integer emergency_id) {
 		 Integer location_id=-1; Location loc = null;
 			try {
-				String SQL_code = "SELECT location_id FROM emergency WHERE emergency_id LIKE ?";
+				String SQL_code = "SELECT location_id FROM emergency WHERE emergency_id = ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, emergency_id);
-				ResultSet result_set = template.executeQuery();
+				result_set = template.executeQuery();
 				while(result_set.next()) {
 					location_id = result_set.getInt("location_id");
 				}
@@ -582,10 +587,10 @@ public class SQLManager implements Interface {
 	 public Location Search_location_by_id(Integer id) {
 		 Location loc = null; String type="",vehicle="";
 			try {
-				String SQL_code = "SELECT * FROM location WHERE location_id LIKE ?";
+				String SQL_code = "SELECT * FROM location WHERE location_id = ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, id);
-				ResultSet result_set = template.executeQuery();
+				result_set = template.executeQuery();
 				while(result_set.next()) {
 					type = result_set.getString("type");
 					vehicle = result_set.getString("vehicle");
@@ -604,10 +609,10 @@ public class SQLManager implements Interface {
 		Integer emergency_id=-1, level=-1, spe_id=-1, disease_id=-1, protocol_id=-1, location_id=-1;
 		String date = "", direction="";	
 			try {
-				String SQL_code = "SELECT * FROM emergency WHERE code LIKE ?";
+				String SQL_code = "SELECT * FROM emergency WHERE code = ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, code);
-				ResultSet result_set = template.executeQuery();
+				result_set = template.executeQuery();
 				
 			    while(result_set.next()) {
 			    	emergency_id = result_set.getInt("emergency_id");
@@ -623,7 +628,8 @@ public class SQLManager implements Interface {
 			    Disease dis = Search_disease_by_id(disease_id);
 			    Location loc = Search_location_from_emergency(emergency_id);
 			    Protocol prot = Search_protocol_by_emergency_id(protocol_id);
-				Emergency emergency = new Emergency(emergency_id, code, date, level, direction, prot, loc, spe, dis);
+			    Patient patient = Search_stored_patient_by_emergency_id(emergency_id);
+				Emergency emergency = new Emergency(emergency_id, code, date, level, direction, prot, loc, spe, dis, patient);
 				template.close();
 				return emergency;
 			} catch (SQLException search_emergency_error) {
@@ -639,7 +645,7 @@ public class SQLManager implements Interface {
 				String SQL_code = "SELECT specialty_id FROM specialty WHERE name LIKE ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setString(1, name);
-				ResultSet result_set = template.executeQuery();
+				result_set = template.executeQuery();
 				
 			    while(result_set.next()) {
 			    	spe_id = result_set.getInt("specialty_id");
@@ -662,7 +668,7 @@ public class SQLManager implements Interface {
 				String SQL_code = "SELECT * FROM specialty WHERE name LIKE ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setString(1, name);
-				ResultSet result_set = template.executeQuery();
+				result_set = template.executeQuery();
 				while (result_set.next()) {
 					id = result_set.getInt("specialty_id");
 				}
@@ -682,10 +688,10 @@ public class SQLManager implements Interface {
 		 Specialty spe = null;
 		 String name ="";
 			try {
-				String SQL_code = "SELECT * FROM specialty WHERE specialty_id LIKE ?";
+				String SQL_code = "SELECT * FROM specialty WHERE specialty_id = ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, id);
-				ResultSet result_set = template.executeQuery();
+				result_set = template.executeQuery();
 				while (result_set.next()) {
 					name = result_set.getString("name");
 				}
@@ -706,10 +712,10 @@ public class SQLManager implements Interface {
 		 Integer spe_id=-1;
 			try {
 				
-				String SQL_code = "SELECT specialty_id FROM emergency WHERE emergency_id LIKE ?";
+				String SQL_code = "SELECT specialty_id FROM emergency WHERE emergency_id = ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, id);
-				ResultSet result_set = template.executeQuery();
+				result_set = template.executeQuery();
 				while (result_set.next()) {
 					spe_id = result_set.getInt("specialty_id");
 				}
@@ -729,10 +735,10 @@ public class SQLManager implements Interface {
 		 Protocol prot = null; Integer prot_id=-1;
 			try {
 				
-				String SQL_code = "SELECT protocol_id FROM emergency WHERE emergency_id LIKE ?";
+				String SQL_code = "SELECT protocol_id FROM emergency WHERE emergency_id = ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, id);
-				ResultSet result_set = template.executeQuery();
+				result_set = template.executeQuery();
 				while (result_set.next()) {
 					prot_id = result_set.getInt("protocol_id");
 				}
@@ -756,7 +762,7 @@ public class SQLManager implements Interface {
 				String SQL_code = "SELECT * FROM protocol WHERE protocol_id = ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, id);
-				ResultSet result_set = template.executeQuery();
+				result_set = template.executeQuery();
 				while (result_set.next()) { 	
 					info = result_set.getString("info");
 					type = result_set.getString("type");
@@ -777,10 +783,10 @@ public class SQLManager implements Interface {
 		 Disease disease=null;
 		 String name="", list="";
 			try {
-				String SQL_code = "SELECT * FROM disease WHERE disease_id LIKE ?";
+				String SQL_code = "SELECT * FROM disease WHERE disease_id = ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, id);
-				ResultSet result_set = template.executeQuery();
+				result_set = template.executeQuery();
 				while (result_set.next()) {
 					name = result_set.getString("name");
 					list = result_set.getString("symptom_list");
@@ -798,10 +804,10 @@ public class SQLManager implements Interface {
 	 public Integer Search_disease_by_emergency_id(Integer id) {
 		 Integer disease_id=-1;
 			try {
-				String SQL_code = "SELECT disease_id FROM emergency WHERE emergency_id LIKE ?";
+				String SQL_code = "SELECT disease_id FROM emergency WHERE emergency_id = ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, id);
-				ResultSet result_set = template.executeQuery();
+				result_set = template.executeQuery();
 				while (result_set.next()) {
 					disease_id = result_set.getInt("disease_id");
 				}
@@ -821,15 +827,13 @@ public class SQLManager implements Interface {
 					String SQL_code = "SELECT * FROM disease WHERE name LIKE ?";
 					PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 					template.setString(1, name);
-					ResultSet result_set = template.executeQuery();
+					result_set = template.executeQuery();
 					while (result_set.next()) {
 						id = result_set.getInt("disease_id");
 						list = result_set.getString("symptom_list");
 					}
 					disease = new Disease(id,name,list);
 					template.close();
-					
-					System.out.println("From DB: "+disease.toString());
 					return disease;
 				} catch (SQLException search_disease_error) {
 					search_disease_error.printStackTrace();
@@ -841,10 +845,10 @@ public class SQLManager implements Interface {
 	 public String Search_symptom_by_id(Integer id) {
 		 String name="";
 			try {
-				String SQL_code = "SELECT * FROM symptom WHERE symptom_id LIKE ?";
+				String SQL_code = "SELECT * FROM symptom WHERE symptom_id = ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, id);
-				ResultSet result_set = template.executeQuery();
+				result_set = template.executeQuery();
 				while (result_set.next()) {
 					name = result_set.getString("name");
 				}
@@ -863,7 +867,7 @@ public class SQLManager implements Interface {
 	 public Boolean Associate_symptom_list_to_disease(String symptom_list, Integer disease_id) {
 			
 			try {
-				String SQL_code = "UPDATE disease SET symptom_list = ? WHERE disease_id LIKE ?";
+				String SQL_code = "UPDATE disease SET symptom_list = ? WHERE disease_id = ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setString(1, symptom_list);
 				template.setInt(2, disease_id);
@@ -884,12 +888,12 @@ public class SQLManager implements Interface {
 		try {
 			Statement statement = this.sqlite_connection.createStatement();
 			String SQL_code = "SELECT * FROM emergency";
-			ResultSet rs = statement.executeQuery(SQL_code);
-			while(rs.next()) {
-				Integer id = rs.getInt("emergency_id");
-				Integer code = rs.getInt("code");
-				Integer level = rs.getInt("level");
-				String register_date = rs.getString("register_date");
+			result_set = statement.executeQuery(SQL_code);
+			while(result_set.next()) {
+				Integer id = result_set.getInt("emergency_id");
+				Integer code = result_set.getInt("code");
+				Integer level = result_set.getInt("level");
+				String register_date = result_set.getString("register_date");
 				list.add(new Emergency(id, code, register_date, level));
 			}
 			return list;
@@ -904,9 +908,9 @@ public class SQLManager implements Interface {
 		try {
 			Statement statement = this.sqlite_connection.createStatement();
 			String SQL_code = "SELECT name FROM specialty";
-			ResultSet rs = statement.executeQuery(SQL_code);
-			while(rs.next()) {
-				String name = rs.getString("name");
+			result_set = statement.executeQuery(SQL_code);
+			while(result_set.next()) {
+				String name = result_set.getString("name");
 				list.add(name);
 			}
 			return list;
@@ -919,14 +923,14 @@ public class SQLManager implements Interface {
 	public List<Disease> List_all_diseases_by_specialty_id(Integer spe_id){
 		List<Disease> list = new LinkedList<Disease>();
 		try {
-			String SQL_code = "SELECT * FROM disease WHERE specialty_id LIKE ?";
+			String SQL_code = "SELECT * FROM disease WHERE specialty_id = ?";
 			PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 			template.setInt(1, spe_id);
-			ResultSet rs = template.executeQuery();
-			while(rs.next()) {
-				Integer id = rs.getInt("disease_id");
-				String name = rs.getString("name");
-				String symp_list = rs.getString("symptom_list");
+			result_set = template.executeQuery();
+			while(result_set.next()) {
+				Integer id = result_set.getInt("disease_id");
+				String name = result_set.getString("name");
+				String symp_list = result_set.getString("symptom_list");
 				list.add(new Disease(id,name,symp_list));
 			}
 			return list;
@@ -943,9 +947,9 @@ public class SQLManager implements Interface {
 			String SQL_code = "SELECT symptom_list FROM disease WHERE name LIKE ?";
 			PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 			template.setString(1, disease);
-			ResultSet rs = template.executeQuery();
-			while(rs.next()) {
-				symptom = rs.getString("symptom_list");
+			result_set = template.executeQuery();
+			while(result_set.next()) {
+				symptom = result_set.getString("symptom_list");
 			}
 			list.addAll(Arrays.asList(symptom.split(",")));
 			return list;
@@ -960,9 +964,9 @@ public class SQLManager implements Interface {
 		try {
 			Statement statement = this.sqlite_connection.createStatement();
 			String SQL_code = "SELECT type FROM location";
-			ResultSet rs = statement.executeQuery(SQL_code);
-			while(rs.next()) {
-				String type = rs.getString("type");
+			result_set = statement.executeQuery(SQL_code);
+			while(result_set.next()) {
+				String type = result_set.getString("type");
 				list.add(type);
 			}
 			return list;
@@ -975,12 +979,12 @@ public class SQLManager implements Interface {
 	public List<String> List_all_symptoms_by_specialty_id(Integer spe_id){
 		List<String> list = new LinkedList<String>();
 		try {
-			String SQL_code = "SELECT symptom_id FROM specialty_symptom WHERE specialty_id LIKE ?";
+			String SQL_code = "SELECT symptom_id FROM specialty_symptom WHERE specialty_id = ?";
 			PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 			template.setInt(1, spe_id);
-			ResultSet rs = template.executeQuery();
-			while(rs.next()) {
-				Integer id = rs.getInt("symptom_id");
+			result_set = template.executeQuery();
+			while(result_set.next()) {
+				Integer id = result_set.getInt("symptom_id");
 				String name = Search_symptom_by_id(id);
 				list.add(name);
 			}
@@ -998,11 +1002,11 @@ public class SQLManager implements Interface {
 		try {
 			Statement statement = this.sqlite_connection.createStatement();
 			String SQL_code = "SELECT * FROM protocol";
-			ResultSet rs = statement.executeQuery(SQL_code);
-			while(rs.next()) {
-				Integer id = rs.getInt("protocol_id");
-				String info = rs.getString("info");
-				String type = rs.getString("type");
+			result_set = statement.executeQuery(SQL_code);
+			while(result_set.next()) {
+				Integer id = result_set.getInt("protocol_id");
+				String info = result_set.getString("info");
+				String type = result_set.getString("type");
 				list.add(new Protocol(id, info, type));
 			}
 			return list;

@@ -2,6 +2,7 @@ package application;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.fxml.Initializable;
@@ -66,42 +67,47 @@ public class LogInController implements Initializable {
 		warning.setVisible(false);
 		loginButton.setDisable(true);
 		
-		//new Thread(new ThreadCreation()).start();   ----> ERROR
-		
-		
 		manager_object = new SQLManager();
-		/*
-		manager_object.Connect();
-        Boolean tables = manager_object.Create_tables();
-        if(tables==true) {
-        	manager_object.Insert_default_elements_toDB();
-        }
-		*/
 		
 		loginButton.setOnAction((ActionEvent event) -> {
-			try {
-				MenuController.setManager(manager_object);
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("OptionsView.fxml"));
-				Parent root = (Parent) loader.load();
-				this.menu_controller = new MenuController();
-				this.menu_controller = loader.getController();
-				
-				Stage stage = new Stage();
-				stage.setAlwaysOnTop(true);
-				stage.initStyle(StageStyle.UNDECORATED);
-				stage.initModality(Modality.APPLICATION_MODAL);
-				stage.setScene(new Scene(root));
-				stage.show();
-				
-				main_menu_stage = (Stage) anchorPane.getScene().getWindow();
-				main_menu_stage.close();
-					
-				
-			} catch (Exception log_in_error) {
-				log_in_error.printStackTrace();
-			}
 			
+		Boolean validation = Check_encrypted_password(passwordField.getText());
+		
+			if (validation == true) {
+				
+				warning.setVisible(false);
+				loginButton.setDisable(false);
+				
+				try {
+					MenuController.setValues(manager_object);
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("OptionsView.fxml"));
+					Parent root = (Parent) loader.load();
+					this.menu_controller = new MenuController();
+					this.menu_controller = loader.getController();
+					
+					Stage stage = new Stage();
+					stage.setAlwaysOnTop(true);
+					stage.initStyle(StageStyle.UNDECORATED);
+					stage.initModality(Modality.APPLICATION_MODAL);
+					stage.setScene(new Scene(root));
+					stage.show();
+					
+					main_menu_stage = (Stage) anchorPane.getScene().getWindow();
+					main_menu_stage.close();
+						
+					
+				} catch (Exception log_in_error) {
+					log_in_error.printStackTrace();
+				}
+			
+			
+			} else {
+				warning.setVisible(true);
+				loginButton.setDisable(true);
+
+			}
 		});
+		
 		
 		signupButton.setOnMouseClicked((MouseEvent event) -> {
 			try {
@@ -131,16 +137,35 @@ public class LogInController implements Initializable {
 		
 	}
 	
+	/* verify the original password and encrypted password */  
+	Boolean Check_encrypted_password(String password) {
+		
+		List<String> pass = manager_object.Get_user_password(usernameField.getText());
+        Boolean status = PasswordUtils.verifyUserPassword(password, pass.get(0), pass.get(1));  
+        
+        if(status==true)  {
+            System.out.println("Password Matched");
+            return true;
+        } else  {
+        	warning.setVisible(true);
+            warningLabel.setText("ERROR! Incorrect password"); 
+            loginButton.setDisable(true);
+            return false;
+        }
+	    
+	}
+	
 	
 	@FXML
     void check_user_existence(MouseEvent event) throws IOException {
 		
 		if (!usernameField.getText().isEmpty() & !passwordField.getText().isEmpty()) {
 			
-			if (manager_object.Search_stored_user_by_username(usernameField.getText()) == -1 & manager_object.Get_user_password(usernameField.getText()).equals(true)) {
+			if(manager_object.Search_stored_user_by_username(usernameField.getText()) == -1) {
 				warning.setVisible(true);
-				warningLabel.setText("ERROR! Username or password doesn't exist");
+				warningLabel.setText("ERROR! Username doesn't exist");
 				loginButton.setDisable(true);
+				
 			} else {
 				warning.setVisible(false);
 				loginButton.setDisable(false);
@@ -154,4 +179,11 @@ public class LogInController implements Initializable {
 	}
 	
 
+	@FXML
+    void close_window(MouseEvent event) {
+		main_menu_stage = (Stage) menuPane.getScene().getWindow();
+		main_menu_stage.close();
+    }
+	
+	
 }

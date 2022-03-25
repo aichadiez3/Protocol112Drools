@@ -46,7 +46,7 @@ public class Emergency implements Serializable {
 	
 	
 	public Emergency(Integer id, Integer code, String date, Integer severity, String direction, Protocol protocol,
-			Location location, Specialty specialty, Disease disease) {
+			Location location, Specialty specialty, Disease disease, Patient patient) {
 		super();
 		this.id = id;
 		this.code = code;
@@ -57,6 +57,7 @@ public class Emergency implements Serializable {
 		this.location = location;
 		this.specialty = specialty;
 		this.disease = disease;
+		this.patient = patient;
 	}
 
 	public Emergency(Integer id, Patient patient) {

@@ -26,12 +26,11 @@
             <Label layoutX="231.0" layoutY="97.0" onMouseClicked="#return_window" style="-fx-text-fill: -fx-blue; -fx-font-size: 24;" styleClass="title-text-style" stylesheets="@dark-theme.css" text="Registration" />
             <PasswordField fx:id="passwordField" layoutX="53.0" layoutY="263.0" prefHeight="31.0" prefWidth="197.0" promptText="Password" styleClass="text-field" stylesheets="@dark-theme.css" />
             <PasswordField fx:id="passwordField2" layoutX="53.0" layoutY="307.0" onMouseExited="#validate_password" prefHeight="31.0" prefWidth="197.0" promptText="Confirm your password" styleClass="text-field" stylesheets="@dark-theme.css" />
-            <Button fx:id="signUpButton" layoutX="355.0" layoutY="307.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="108.0" styleClass="sign-in-button" stylesheets="@dark-theme.css" text="Sign up" />
             <ComboBox fx:id="professionField" layoutX="310.0" layoutY="221.0" prefHeight="32.0" prefWidth="197.0" promptText="Profession" styleClass="text-field" stylesheets="@dark-theme.css" />
             <Group fx:id="warning" layoutX="86.0" layoutY="156.0" visible="false">
                <children>
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff69694c" height="36.0" stroke="#ff1f1fb5" strokeType="INSIDE" width="370.0" />
-                  <Label fx:id="warningLabel" layoutX="69.0" layoutY="6.0" text="ERROR! The password must match" textFill="#ff0000c7">
+                  <Label fx:id="warningLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="69.0" layoutY="6.0" text="ERROR! The password must match" textAlignment="CENTER" textFill="#ff0000c7" wrapText="true">
                      <font>
                         <Font name="System Italic" size="15.0" />
                      </font>
@@ -43,6 +42,27 @@
                   <Image url="@icons/back.png" />
                </image>
             </ImageView>
+            <Group fx:id="okay" layoutX="259.0" layoutY="224.0" visible="false">
+               <children>
+                  <ImageView fitHeight="35.0" fitWidth="34.0" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/ok.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="35.0" fitWidth="34.0" layoutY="41.0" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/ok.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="35.0" fitWidth="34.0" layoutY="85.0" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/ok.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Group>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="188.0" layoutX="109.0" layoutY="183.0" onMouseMoved="#validate_password" stroke="BLACK" strokeType="INSIDE" visible="false" width="402.0" />
+            <Button fx:id="signUpButton" layoutX="355.0" layoutY="307.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="108.0" style="-fx-background-color: -fx-primary;" styleClass="sign-in-button" stylesheets="@dark-theme.css" text="Sign up" />
          </children>
       </Pane>
    </children>

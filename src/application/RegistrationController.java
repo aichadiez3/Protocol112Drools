@@ -2,6 +2,8 @@ package application;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -62,6 +64,9 @@ public class RegistrationController implements Initializable {
     
     @FXML
     private Group warning;
+    
+    @FXML
+    private Group okay;
 
     @FXML
     private Label warningLabel;
@@ -76,27 +81,30 @@ public class RegistrationController implements Initializable {
 		
 		signUpButton.setOnAction((ActionEvent event) -> {
 			try {
-				if (passwordField.getText().equals(passwordField2.getText()) & !usernameField.equals(null)) {
-					
-					MenuController.setValues(manager_object, null);
-					FXMLLoader loader = new FXMLLoader(getClass().getResource("OptionsView.fxml"));
-					Parent root = (Parent) loader.load();
-					this.menu_controller = new MenuController();
-					this.menu_controller = loader.getController();
-					main_menu_stage = (Stage) registrationPane.getScene().getWindow();
-					main_menu_stage.close();
-					
-					Stage stage = new Stage();
-					stage.setAlwaysOnTop(true);
-					stage.initStyle(StageStyle.UNDECORATED);
-					stage.initModality(Modality.APPLICATION_MODAL);
-					stage.setScene(new Scene(root));
-					stage.show();
-					
-				} else {
-					warning.setVisible(true);
-					signUpButton.setDisable(true);
-				}
+				
+				
+				List<String> encrypt = Encryption_using_salt_base64(passwordField.getText());
+				
+				manager_object.Insert_new_user(usernameField.getText(), encrypt.get(0), encrypt.get(1), professionField.getValue());
+				
+				MenuController.setValues(manager_object);
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("OptionsView.fxml"));
+				Parent root = (Parent) loader.load();
+				this.menu_controller = new MenuController();
+				this.menu_controller = loader.getController();
+				main_menu_stage = (Stage) registrationPane.getScene().getWindow();
+				main_menu_stage.close();
+				
+				Stage stage = new Stage();
+				stage.setAlwaysOnTop(true);
+				stage.initStyle(StageStyle.UNDECORATED);
+				stage.initModality(Modality.APPLICATION_MODAL);
+				stage.setScene(new Scene(root));
+				stage.show();
+							
+						
+				
+				
 			} catch (IOException signup_error) {
 				signup_error.printStackTrace();
 			}
@@ -129,34 +137,64 @@ public class RegistrationController implements Initializable {
 		
     }
 
-	@SuppressWarnings("unlikely-arg-type")
 	@FXML
     void validate_password(MouseEvent event) {
-    	
-    	// ------------> Check if PASSWORD is correct
 		
     	String username = usernameField.getText();
-    	
-    	if (!usernameField.getText().equals(manager_object.Search_stored_user_by_username(username))) {
-    		
-    		if(!passwordField.getText().contentEquals("") & !passwordField2.getText().contentEquals("") & passwordField.getText().equals(passwordField2.getText())) {
-				warning.setVisible(false);
-				signUpButton.setDisable(false);
-			
-			} else {
-				signUpButton.setDisable(true);
-				warning.setVisible(true);
-				warningLabel.setText("ERROR! The password must match");
+    	    	
+    	if(manager_object.Search_stored_user_by_username(username) == -1) {
+			if (passwordField.getText().equals(passwordField2.getText())) {
+				if(professionField.getValue() != null) {
+					
+					signUpButton.setDisable(false);
+					warning.setVisible(false);
+					okay.setVisible(true);
+					
+				} else {
+					warning.setVisible(true);
+					warningLabel.setText("ERROR! Specify a profession");
+					signUpButton.setDisable(true);
+					okay.setVisible(false);
+				}
 				
+			} else {
+				warning.setVisible(true);
+				signUpButton.setDisable(true);
+				warningLabel.setText("ERROR! The password must match");
+				okay.setVisible(false);
 			}
-    	} else {
-			signUpButton.setDisable(true);
+		} else {
 			warning.setVisible(true);
 			warningLabel.setText("ERROR! Username already exists");
-			
+			signUpButton.setDisable(true);
+			okay.setVisible(false);
 		}
     	
-    	
     }
+	
+	/*
+	 * Password-Based Encryption using Salt and Base64:
+The password-based encryption technique uses plain text passwords and salt values to generate a hash value. And the hash value is then encoded as a Base64 string. 
+Salt value contains random data generated using an instance of Random class from java.util package.
+
+The following program demonstrates password encryption using salt and base64.
+	 *
+	 * */
+	
+
+	public List<String> Encryption_using_salt_base64(String password){
+	          
+	        /* generates the Salt value. It can be stored in a database. */  
+	        String saltValue = PasswordUtils.getSaltvalue(30);  
+	          
+	        /* generates an encrypted password. It can be stored in a database.*/  
+	        String encryptedpassword = PasswordUtils.generateSecurePassword(password, saltValue);  
+	        
+	        String[] encript = new String[2];
+	        encript[0] = encryptedpassword;
+	        encript[1] = saltValue;
+	        
+	    return Arrays.asList(encript);
+	}
 	
 }

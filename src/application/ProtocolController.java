@@ -18,9 +18,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import jdbc.SQLManager;
 import pojos.Patient;
-import pojos.Protocol;
-import pojos.Specialty;
-import pojos.Disease;
 import pojos.Emergency;
 
 public class ProtocolController implements Initializable {
@@ -38,7 +35,6 @@ public class ProtocolController implements Initializable {
 	public static void setValues(SQLManager manager, Emergency urg) {
 		manager_object=manager;
 		urgency = urg;
-		
 	}
 	
 	 @FXML
@@ -82,9 +78,12 @@ public class ProtocolController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
+
 		patient = urgency.getPatient();
 		
-		System.out.println(patient.toString());
+		Integer spe_id = manager_object.Search_stored_emergency_by_code(urgency.getCode()).getId();
+		urgency.setId(spe_id);
+		patient.setId(urgency.getPatient().getId());	
 		
 		nameLabel.setText(patient.getName());
 		surnameLabel.setText(patient.getSurname());
@@ -93,19 +92,17 @@ public class ProtocolController implements Initializable {
 		drugs.setText(patient.getDrugs().toString());
 		code.setText(urgency.getCode().toString());
 		
-		
 		specialityLabel.setText(urgency.getSpecialty().getName().toString());
-		
 		diseaseLabel.setText(urgency.getDisease().getName().toString());
-		
 		protocolInfo.setText(urgency.getProtocol().getInfo().toString());
+		typeLabel.setText(urgency.getProtocol().getProtocolType().toString());
 	}
 	
 	
 	@FXML
     void open_new_case(MouseEvent event) {
 		try {
-			MenuController.setValues(manager_object, null);
+			MenuController.setValues(manager_object);
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("OptionsView.fxml"));
 			Parent root = (Parent) loader.load();
 			this.menu_controller = new MenuController();

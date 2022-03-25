@@ -40,18 +40,12 @@ public class MenuController implements Initializable{
 	private static Stage main_menu_stage;
 	private static SQLManager manager_object;
 	private static Emergency urgency;
-	private static Patient patient;
 	
 	public DataController data_controller;
 	public ProtocolController protocol_controller;
 	
-	public static void setManager(SQLManager SQL_manager) {
+	public static void setValues(SQLManager SQL_manager) {
 		manager_object = SQL_manager;
-	}
-	
-	public static void setValues(SQLManager SQL_manager, Emergency urg) {
-		manager_object = SQL_manager;
-		urgency=urg;
 	}
 	
 	@FXML
@@ -92,8 +86,6 @@ public class MenuController implements Initializable{
 		new_case.setOnMouseClicked((MouseEvent event) -> {
 			try {
 				urgency = new Emergency();
-				//Integer urgency_id = manager_object.Insert_new_emergency(urgency.getCode(), urgency.getDate());
-				//urgency = manager_object.Search_stored_emergency_by_code(urgency.getCode());
 				DataController.setValues(manager_object, urgency);
 								
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("DataView.fxml"));
@@ -222,7 +214,13 @@ public class MenuController implements Initializable{
     	manager_object.Close_connection();
     }
     
-    
+    @FXML
+    void return_window(MouseEvent event) {
+    	codePanel.setVisible(false);
+    	codeField.setText("");
+    	menuPane.setEffect(null);
+		menuPane.setDisable(false);
+    }
 
 }
 
