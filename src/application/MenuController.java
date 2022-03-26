@@ -116,7 +116,16 @@ public class MenuController implements Initializable{
 			menuPane.setDisable(true);
 			
 			
+			List<Emergency> code_list = manager_object.List_all_codes();
+			for(Emergency urgency : code_list) {
+				code_objects.add(new CodeObject(urgency.getCode().toString(), urgency.getSeverity().toString(), urgency.getDate().toString()));
+			}
 			
+			TreeItem<CodeObject> root = new RecursiveTreeItem<CodeObject>(code_objects, RecursiveTreeObject::getChildren);
+			codeTable.setPlaceholder(new javafx.scene.control.Label("No urgencies found"));
+			
+			codeTable.setRoot(root);
+			codeTable.setShowRoot(false);
 			TreeTableColumn<CodeObject, String> ref_date = new TreeTableColumn<>("Date");
 			ref_date.setPrefWidth(170);
 			ref_date.setCellValueFactory(
@@ -153,18 +162,7 @@ public class MenuController implements Initializable{
 			level.getStyleClass().add("tree-table-column");
 			level.setResizable(false);
 			
-			
-			List<Emergency> code_list = manager_object.List_all_codes();
-			for(Emergency urgency : code_list) {
-				code_objects.add(new CodeObject(urgency.getCode().toString(), urgency.getSeverity().toString(), urgency.getDate().toString()));
-			}
-			
-			TreeItem<CodeObject> root = new RecursiveTreeItem<CodeObject>(code_objects, RecursiveTreeObject::getChildren);
-			codeTable.setPlaceholder(new javafx.scene.control.Label("No urgencies found"));
 			codeTable.getColumns().setAll(code, level, ref_date);
-			codeTable.setRoot(root);
-			codeTable.setShowRoot(false);
-			
 			
 			proceedButton.setOnMouseClicked((MouseEvent event2) -> {
 				

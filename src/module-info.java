@@ -8,7 +8,8 @@ module Protocol112Drools
 	requires org.kie.api;
 	requires jdk.compiler;
 	requires java.base;
-	requires jfoenix;
+	requires com.jfoenix;
+	//requires jfoenix;
 	
 	opens application to javafx.graphics, javafx.fxml;
 }
