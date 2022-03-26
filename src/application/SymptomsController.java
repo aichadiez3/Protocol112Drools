@@ -205,7 +205,6 @@ public class SymptomsController implements Initializable {
 		Integer spe_id = manager_object.Search_specialty_id_by_name(spe_name);
 		
 		List<String> symp = manager_object.List_all_symptoms_by_specialty_id(spe_id);
-		System.out.println(symp);
         ObservableList<String> symptoms = delete_repetitions(symp);
 		symptomsList.setItems(symptoms);
 		
@@ -216,8 +215,6 @@ public class SymptomsController implements Initializable {
         ArrayList<String> final_list = new ArrayList<>(hashSet);
 		
         ObservableList<String> output = FXCollections.observableArrayList(final_list);
-        System.out.println(output);
-        
 		return output;
 	}
 
