@@ -375,7 +375,6 @@ public class SQLManager implements Interface {
 		}
 		
 		// Assosiate to disease
-		
 		List<String> oncology_diseases = Arrays.asList("Colon cancer light,Colon cancer severe,Prostate cancer light,Prostate cancer severe,Lung cancer light,Lung cancer severe,Breast cancer light,Breast cancer severe,Leukemia light,Leukemia severe".split(","));
 		i=0; spe_id = Search_specialty_id_by_name("Oncology");
 		
@@ -413,10 +412,210 @@ public class SQLManager implements Interface {
 	
 	
 	// NEUROLOGY
+		List<String> neuro_symps_1 = Arrays.asList("Headache/Loss of vision/Loss of balance/Difficulty speaking or undestand/Leg or arm weakness/|".split("/"));
+		List<String> neuro_symps_2 = Arrays.asList("Staring at one point/Muscle construction/Loss of consciousness/Staring at one point/|".split("/"));
+		List<String> neuro_symps_3 = Arrays.asList("Vomits/Headache/Fatigue/Sensitivity to light, smell or sound/Thirst/Mood changes/|".split("/"));
+		List<String> neuro_symps_4 = Arrays.asList("Headache/Nausea/Pain/Chest pain/Negative Mood/Profused sweating/Difficulty breathing/Avoidence of feelings, thoughts or places/|".split("/"));
+		List<String> neuro_symps_5 = Arrays.asList("Headache/Seizures/Fever/Rash/Sleepiness/Vomits/Neck or joints pain/Light sensivity/|".split("/"));
+
+		
+		names.clear();
+		names.addAll(neuro_symps_1);
+		names.addAll(neuro_symps_2);
+		names.addAll(neuro_symps_3);
+		names.addAll(neuro_symps_4);
+		names.addAll(neuro_symps_5);
+
+		List<Symptom> neuro_symp_list = new ArrayList<>();
+		m=0;
+		for(String n : names) {
+			if(m < names.size()) {
+				neuro_symp_list.add(new Symptom(m, n));
+				m++;
+			} else {
+				break;
+			}
+		}
+		
+		// Assosiate to disease
+		
+		List<String> neuro_diseases = Arrays.asList("Stroke,Epilepsy,Migraine,PTSD,Meningities".split(","));
+		i=0; spe_id = Search_specialty_id_by_name("Neurology");
+		
+		for (String d: neuro_diseases) {
+			Disease disease = Insert_new_disease(d, spe_id);
+			if(neuro_symp_list.get(i).toString().contains("|")) {
+				i++;
+			} 
+			
+			while(!neuro_symp_list.get(i).toString().contains("|")) {
+				saver.add(neuro_symp_list.get(i).getSymptom());
+				i++;
+			}
+			Associate_symptom_list_to_disease(saver.toString(), Search_disease_by_id(disease.getId()).getId());
+			saver.clear();
+		}
+		
+		neurology_disease_list = new ArrayList<>(List_all_diseases_by_specialty_id(spe_id));
+		
+		//Remove repetitions and associate symptoms to specialty
+		hashSet.clear();
+		hashSet = new LinkedHashSet<>(names);
+		ArrayList<String> neuro_list = new ArrayList<>(hashSet);
+				        
+		for(int it = 0; it < neuro_list.size(); it++) {
+			if (neuro_list.get(it).equals("|")) {
+				neuro_list.remove(it);
+			} else {
+				Integer index = Insert_new_symptom(neuro_list.get(it));
+				Associate_symptom_to_specialty(index, Search_specialty_id_by_name("Neurology"));
+			}
+		}
+		
 	
 	// TOXICOLOGY
-	
+		List<String> toxi_symps_1 = Arrays.asList("Fever/Chills/Diarrhea/Pain/Nausea/Headache/Heart rate acceleration/Skin redness/Vomits/Paralysis/|".split("/")); // Food Poisoning
+		List<String> toxi_symps_2 = Arrays.asList("Negative Mood/Vomits/Hyperactivity/Phlegmaticy/Reddened Sclera/|".split("/")); // Drugs
+		List<String> toxi_symps_3 = Arrays.asList("Fatigue/Headache/Loss of appetite/Diarrhea/Nausea/Vomits/Loss of appetite/Headache/|".split("/")); // Drugs
+		List<String> toxi_symps_4 = Arrays.asList("Vomits/Runny Nose/Itching/Hives/Swelling/Skin Rash/Shortness of breath/|".split("/")); // Drugs
+
+		
+		names.clear();
+		names.addAll(toxi_symps_1);
+		names.addAll(toxi_symps_2);
+		names.addAll(toxi_symps_3);
+		names.addAll(toxi_symps_4);
+		
+		List<Symptom> toxi_symp_list = new ArrayList<>();
+		m=0;
+		for(String n : names) {
+			if(m < names.size()) {
+				toxi_symp_list.add(new Symptom(m, n));
+				m++;
+			} else {
+				break;
+			}
+		}
+		
+		// Assosiate to disease
+		
+		List<String> toxic_diseases = Arrays.asList("Food poisoning,Drugs,Hangover,Medicament allergy".split(","));
+		i=0; spe_id = Search_specialty_id_by_name("Toxicology");
+		
+		for (String d: toxic_diseases) {
+			Disease disease = Insert_new_disease(d, spe_id);
+			if(toxi_symp_list.get(i).toString().contains("|")) {
+				i++;
+			} 
+			
+			while(!toxi_symp_list.get(i).toString().contains("|")) {
+				saver.add(toxi_symp_list.get(i).getSymptom());
+				i++;
+			}
+			Associate_symptom_list_to_disease(saver.toString(), Search_disease_by_id(disease.getId()).getId());
+			saver.clear();
+		}
+		
+		toxicology_disease_list = new ArrayList<>(List_all_diseases_by_specialty_id(spe_id));
+		
+		//Remove repetitions and associate symptoms to specialty
+		hashSet.clear();
+		hashSet = new LinkedHashSet<>(names);
+		ArrayList<String> toxic_list = new ArrayList<>(hashSet);
+				        
+		for(int it = 0; it < toxic_list.size(); it++) {
+			if (toxic_list.get(it).equals("|")) {
+				toxic_list.remove(it);
+			} else {
+				Integer index = Insert_new_symptom(toxic_list.get(it));
+				Associate_symptom_to_specialty(index, Search_specialty_id_by_name("Traumatology"));
+			}
+		}
+		
+		
+		
 	// TRAUMATOLOGY
+		
+			// ---------> Degree Burn
+		List<String> trauma_symps_1_1 = Arrays.asList("Afect epidermis/Pain on contact/Hypersensitivity/Redness of the skin/Inflammation/|".split("/")); //1st
+		List<String> trauma_symps_1_2 = Arrays.asList("Afect epidermis and dermis/Intense pain/Touch hyperesthesia/Inflammation/Red dotted on off-white background/Blisters/|".split("/")); //2nd
+		List<String> trauma_symps_1_3 = Arrays.asList("Afect deep dermis/Organs and nerves affected/Dry and hard skin/White/Do not fell pain/|".split("/")); //3rd
+		
+			// ---------> Dislocation
+		List<String> trauma_symps_2_1 = Arrays.asList("Dislodged joint/First time/After Trauma/|".split("/")); // Acute
+		List<String> trauma_symps_2_2 = Arrays.asList("Dislodged joint/Degradation of the soft joint parts/Difficulty holding the bone in place/Chronic conditions/|".split("/")); // Chronic
+
+			// ---------> Degree Sprain
+		List<String> trauma_symps_3_1 = Arrays.asList("Ligament not broken/Pain/Inflammation/Limited movement/Instability/|".split("/")); //1st
+		List<String> trauma_symps_3_2 = Arrays.asList("Parcial broken Ligament/Pain/Inflammation/Limited movement/Instability/Hematoma/|".split("/")); //2nd
+		List<String> trauma_symps_3_3 = Arrays.asList("Broken Ligament/Pain/Inflammation/Limited movement/Instability/Hematoma/|".split("/")); //3rd
+	
+			// ---------> Fractures
+		List<String> trauma_symps_4_1 = Arrays.asList("Bone broken in two/Deformation of the area/Inflammation/Hematoma/Inability of movement/Disorientation/Loss of consciousness/Numbness/Tingle/Pain/|".split("/")); //Complete
+		List<String> trauma_symps_4_2 = Arrays.asList("Fractured bone/Inflammation/Hematoma/Inability of movement/Disorientation/Loss of consciousness/Numbness/Tingle/Pain/|".split("/")); // Green Stem
+		List<String> trauma_symps_4_3 = Arrays.asList("Fractured bone in more than 1 area/Inflammation/Hematoma/Inability of movement/Disorientation/Loss of consciousness/Numbness/Tingle/Pain/|".split("/")); //Comminuted
+		List<String> trauma_symps_4_4 = Arrays.asList("Broken skin/Bleed/Fractured bone/Inflammation/Hematoma/Inability of movement/Disorientation/Loss of consciousness/Numbness/Tingle/Pain/|".split("/")); //Open
+
+			// ---------> Mild Head Trauma
+		List<String> trauma_symps_5 = Arrays.asList("Head pain/Loss of consciousness/Seizures/Pupil dilation/Confusion/React to stimulous/Able to move/Ringing in the ears/Memory impairment/Blurred vision/Behavior change/Difficulty moving/|".split("/")); //Complete
+
+		// ---------> Complete Spinal Cord Injury
+		List<String> trauma_symps_6 = Arrays.asList("Paralysis/Lose of musscle tone/loss of sensivility/Automatic dysfunction below affected area/|".split("/")); //Complete
+
+		
+		
+		names.clear();
+		names.addAll(trauma_symps_1_1);
+		names.addAll(trauma_symps_1_2);
+		names.addAll(trauma_symps_1_3);
+		names.addAll(toxi_symps_4);
+		
+		List<Symptom> trauma_symp_list = new ArrayList<>();
+		m=0;
+		for(String n : names) {
+			if(m < names.size()) {
+				trauma_symp_list.add(new Symptom(m, n));
+				m++;
+			} else {
+				break;
+			}
+		}
+		
+		// Assosiate to disease
+		List<String> trauma_diseases = Arrays.asList("First Degree Burn,Second Degree Burn,Third Degree Burn,Acute Dislocation,Chronic Dislocation,First Degree Sprain,"
+				+ "Second Degree Sprain,Third Degree Sprain,Complete Fracture,Green Stem Fracture,Comminuted Fracture,Open Fracture,Mild Head Trauma,Complete Spinal Cord Injury,"
+				+ "Internal Bleeding,External Bleeding,Venous Hemorrhage,Arterial Bleeding,First Degree Bruise,Second Degree Bruise,Third Degree Bruise".split(","));
+		i=0; spe_id = Search_specialty_id_by_name("Traumatology");
+		
+		for (String d: trauma_diseases) {
+			Disease disease = Insert_new_disease(d, spe_id);
+			if(trauma_symp_list.get(i).toString().contains("|")) {
+				i++;
+			} 
+			
+			while(!trauma_symp_list.get(i).toString().contains("|")) {
+				saver.add(trauma_symp_list.get(i).getSymptom());
+				i++;
+			}
+			Associate_symptom_list_to_disease(saver.toString(), Search_disease_by_id(disease.getId()).getId());
+			saver.clear();
+		}
+		
+		traumatology_disease_list = new ArrayList<>(List_all_diseases_by_specialty_id(spe_id));
+		
+		//Remove repetitions and associate symptoms to specialty
+		hashSet.clear();
+		hashSet = new LinkedHashSet<>(names);
+		ArrayList<String> trauma_list = new ArrayList<>(hashSet);
+				        
+		for(int it = 0; it < trauma_list.size(); it++) {
+			if (trauma_list.get(it).equals("|")) {
+				trauma_list.remove(it);
+			} else {
+				Integer index = Insert_new_symptom(trauma_list.get(it));
+				Associate_symptom_to_specialty(index, Search_specialty_id_by_name("Toxicology"));
+			}
+		}
 	
 }	
 	 // -----------------------> INSERT METHODS <---------------------------

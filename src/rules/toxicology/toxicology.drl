@@ -5,14 +5,16 @@ package rules.toxicology;
 import pojos.Emergency;
 import jdbc.SQLManager;
 
-//declare any global variables here
 
-rule ""
+rule "food_poisoning"
+
 	dialect "java"
+
 	when
-	    dbm : SQLManager(  )
-		u : Emergency (getDisease().getName().equals(""))
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Food poisoning"))
 	then
-		u.setProtocol(dbm.Search_protocol_by_id(2));
-		u.setSeverity(5);
+
+		u.setSeverity(3);
+		u.setProtocol(dbm.Search_protocol_by_id(7));
 end

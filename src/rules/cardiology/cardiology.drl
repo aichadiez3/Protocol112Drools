@@ -25,7 +25,7 @@ rule "heart_failure_severe"
 		
 end
 
-rule "heart_failure_severe_light"
+rule "heart_failure_light"
 	dialect "java"
 	when
 		dbm : SQLManager(  )
