@@ -10,13 +10,68 @@ import jdbc.SQLManager;
 
 
 
-rule ""
+
+
+
+rule "stroke"
 	dialect "java"
 	when
 	    dbm : SQLManager(  )
-		u : Emergency (getDisease().getName().equals(""))
+		u : Emergency (getDisease().getName().equals("Stroke"))
 	then
-		u.setProtocol(dbm.Search_protocol_by_id(2));
-		u.setSeverity(5);
+		u.setSeverity(1);
+		u.setProtocol(dbm.Search_protocol_by_id(17));
+		
 end
 
+rule "epilepsy"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Epilepsy"))
+		
+	then
+		u.setSeverity(2);
+		u.setProtocol(dbm.Search_protocol_by_id(15));
+		
+end
+
+
+rule "migraine"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Migraine"))
+	
+	then
+		u.setSeverity(4);
+		u.setProtocol(dbm.Search_protocol_by_id(14));
+		
+end
+
+
+
+
+rule "ptsd"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("PTSD"))
+	then
+		u.setSeverity(5);
+		u.setProtocol(dbm.Search_protocol_by_id(14));
+		
+end
+
+rule "meningities"
+	dialect "java"
+	when
+		
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Meningities"))
+	
+	then
+		u.setSeverity(1);
+		u.setProtocol(dbm.Search_protocol_by_id(16));
+		
+end

@@ -6,13 +6,227 @@ import pojos.Emergency;
 import jdbc.SQLManager;
 
 
-rule ""
+rule "First Degree Burn"
 	dialect "java"
-	when
-	    dbm : SQLManager(  )
-		u : Emergency (getDisease().getName().equals(""))
+	when 
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("First Degree Burn"))
 	then
-		u.setProtocol(dbm.Search_protocol_by_id(2));
 		u.setSeverity(5);
+		u.setProtocol(dbm.Search_protocol_by_id(26));
 end
 
+
+rule "Second Degree Burn"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Second Degree Burn"))
+	then
+		u.setSeverity(3);
+		u.setProtocol(dbm.Search_protocol_by_id(10));
+end
+
+rule "Third Degree Burn"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Third Degree Burn"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(dbm.Search_protocol_by_id(11));
+end
+
+rule "Acute Dislocation"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Acute Dislocation"))
+	then
+		u.setSeverity(3);
+		u.setProtocol(dbm.Search_protocol_by_id(18));
+end
+
+rule "Chronic Dislocation"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Chronic Dislocation"))
+	then
+		u.setSeverity(4);
+		u.setProtocol(dbm.Search_protocol_by_id(27));
+end
+
+rule "First Degree Sprain "
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("First Degree Sprain"))
+	then
+		u.setSeverity(2);
+		u.setProtocol(dbm.Search_protocol_by_id(28));
+end
+
+rule "Second Degree Sprain"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Second Degree Sprain"))
+	then
+		u.setSeverity(2);
+		u.setProtocol(dbm.Search_protocol_by_id(29));
+end
+
+rule "Third Degree Sprain"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Third Degree Sprain"))
+
+	then
+		u.setSeverity(1);
+		u.setProtocol(dbm.Search_protocol_by_id(29));
+end
+
+rule "Complete Fracture"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Complete Fracture"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(dbm.Search_protocol_by_id(29));
+end
+
+rule "Green Stem Fracture"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Green Stem Fracture"))
+	then
+		u.setSeverity(2);
+		u.setProtocol(dbm.Search_protocol_by_id(30));
+end
+
+rule "Comminuted Fracture"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Comminuted Fracture"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(dbm.Search_protocol_by_id(29));
+end
+
+rule "Open Fracture"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Open Fracture"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(dbm.Search_protocol_by_id(29));
+end
+
+rule "Mild Head Trauma"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Mild Head Trauma"))
+	then
+		u.setSeverity(2);
+		u.setProtocol(dbm.Search_protocol_by_id(31));
+end
+
+rule "Complete Spinal Cord Injury"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Complete Spinal Cord Injury"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(dbm.Search_protocol_by_id(32));
+end
+
+rule "Internal Bleeding"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Internal Bleeding"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(dbm.Search_protocol_by_id(32));
+end
+
+rule "External Bleeding"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("External Bleeding"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(dbm.Search_protocol_by_id(33));
+end
+
+rule "Venous Hemorrhage"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Venous Hemorrhage"))
+	then
+		u.setSeverity(2);
+		u.setProtocol(dbm.Search_protocol_by_id(34));
+end
+
+rule "Arterial Bleeding"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Arterial Bleeding"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(dbm.Search_protocol_by_id(34));
+end
+
+rule "First Degree Bruise"
+	dialect "java"
+	when 
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("First Degree Bruise"))
+	then
+		u.setSeverity(5);
+		u.setProtocol(dbm.Search_protocol_by_id(26));
+end
+
+rule "Second Degree Bruise"
+	dialect "java"
+	when 
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Second Degree Bruise"))
+	then
+		u.setSeverity(4);
+		u.setProtocol(dbm.Search_protocol_by_id(26));
+end
+
+rule "Third Degree Bruise"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Third Degree Bruise"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(dbm.Search_protocol_by_id(10));
+end
+
+
+
+
+
+
+
+
+
+
+
+
+							

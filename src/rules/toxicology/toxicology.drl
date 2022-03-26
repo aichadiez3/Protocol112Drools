@@ -18,3 +18,57 @@ rule "food_poisoning"
 		u.setSeverity(3);
 		u.setProtocol(dbm.Search_protocol_by_id(7));
 end
+
+
+
+rule "drugs"
+
+	dialect "java"
+
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Drugs"))
+	
+	then
+
+		u.setSeverity(2);
+		u.setProtocol(dbm.Search_protocol_by_id(7));
+
+end
+
+
+rule "hangover"
+
+	dialect "java"
+
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Hangover"))
+	
+	then
+
+		u.setSeverity(4);
+		u.setProtocol(dbm.Search_protocol_by_id(7));
+
+end
+
+
+rule "medicament_allergy"
+
+	dialect "java"
+
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Medicament allergy"))
+	
+	then
+
+		u.setSeverity(1);
+		u.setProtocol(dbm.Search_protocol_by_id(7));
+
+end
+
+
+
+
+
