@@ -414,8 +414,8 @@ public class SQLManager implements Interface {
 	// NEUROLOGY
 		List<String> neuro_symps_1 = Arrays.asList("Headache/Loss of vision/Loss of balance/Difficulty speaking or undestand/Leg or arm weakness/|".split("/"));
 		List<String> neuro_symps_2 = Arrays.asList("Staring at one point/Muscle construction/Loss of consciousness/Staring at one point/|".split("/"));
-		List<String> neuro_symps_3 = Arrays.asList("Vomits/Headache/Fatigue/Sensitivity to light, smell or sound/Thirst/Mood changes/|".split("/"));
-		List<String> neuro_symps_4 = Arrays.asList("Headache/Nausea/Pain/Chest pain/Negative Mood/Profused sweating/Difficulty breathing/Avoidence of feelings, thoughts or places/|".split("/"));
+		List<String> neuro_symps_3 = Arrays.asList("Vomits/Headache/Fatigue/Sensitivity to light-smell-sound/Thirst/Mood changes/|".split("/"));
+		List<String> neuro_symps_4 = Arrays.asList("Headache/Nausea/Pain/Chest pain/Negative Mood/Profused sweating/Difficulty breathing/Avoidence of feelings-thoughts-places/|".split("/"));
 		List<String> neuro_symps_5 = Arrays.asList("Headache/Seizures/Fever/Rash/Sleepiness/Vomits/Neck or joints pain/Light sensivity/|".split("/"));
 
 		
@@ -558,18 +558,43 @@ public class SQLManager implements Interface {
 
 			// ---------> Mild Head Trauma
 		List<String> trauma_symps_5 = Arrays.asList("Head pain/Loss of consciousness/Seizures/Pupil dilation/Confusion/React to stimulous/Able to move/Ringing in the ears/Memory impairment/Blurred vision/Behavior change/Difficulty moving/|".split("/")); //Complete
-
-		// ---------> Complete Spinal Cord Injury
+			// ---------> Complete Spinal Cord Injury
 		List<String> trauma_symps_6 = Arrays.asList("Paralysis/Lose of musscle tone/loss of sensivility/Automatic dysfunction below affected area/|".split("/")); //Complete
 
+			// ---------> Bleeding
+		List<String> trauma_symps_7_1 = Arrays.asList("Internal damaged organs/Vessels damage/|".split("/")); //Internal
+		List<String> trauma_symps_7_2 = Arrays.asList("Syncope/Hypovolemic shock/Anemia/|".split("/")); //External
+		List<String> trauma_symps_7_3 = Arrays.asList("Dark red blood/Easier to control than arterial ones/Dizziness/Lightheadedness/Extreme paleness/Bleeding from the mouth or rectum/|".split("/")); //Venous Hemorrhage
+		List<String> trauma_symps_7_4 = Arrays.asList("Abundant and intermittent discharge of blood brigth red/Dizziness/Lightheadedness/Extreme paleness/Bleeding from the mouth or rectum/|".split("/")); //Arterial
+
+		// ---------> Degree Bruise
+		List<String> trauma_symps_8_1 = Arrays.asList("Ecchymosis/Redness of the skin/Moderated pain/Inflammation/Hematoma/Not broken skin/|".split("/")); //1st
+		List<String> trauma_symps_8_2 = Arrays.asList("Blood extravasation/Ecchymosis/Redness of the skin/Moderated pain/Inflammation/Hematoma/Not broken skin/|".split("/")); //2nd
+		List<String> trauma_symps_8_3 = Arrays.asList("Deep organ and tissues damage/Fracture/Broken large vessels/Blood extravasation/Ecchymosis/Redness of the skin/Pain/Inflammation/Hematoma/Not broken skin/|".split("/")); //3rd
 		
 		
 		names.clear();
 		names.addAll(trauma_symps_1_1);
 		names.addAll(trauma_symps_1_2);
 		names.addAll(trauma_symps_1_3);
-		names.addAll(toxi_symps_4);
-		
+		names.addAll(trauma_symps_2_1);
+		names.addAll(trauma_symps_2_2);
+		names.addAll(trauma_symps_3_1);
+		names.addAll(trauma_symps_3_2);
+		names.addAll(trauma_symps_3_3);
+		names.addAll(trauma_symps_4_1);
+		names.addAll(trauma_symps_4_2);
+		names.addAll(trauma_symps_4_3);
+		names.addAll(trauma_symps_4_4);
+		names.addAll(trauma_symps_5);
+		names.addAll(trauma_symps_6);
+		names.addAll(trauma_symps_7_1);
+		names.addAll(trauma_symps_7_2);
+		names.addAll(trauma_symps_7_3);
+		names.addAll(trauma_symps_7_4);
+		names.addAll(trauma_symps_8_1);
+		names.addAll(trauma_symps_8_2);
+		names.addAll(trauma_symps_8_3);
 		List<Symptom> trauma_symp_list = new ArrayList<>();
 		m=0;
 		for(String n : names) {
@@ -582,9 +607,7 @@ public class SQLManager implements Interface {
 		}
 		
 		// Assosiate to disease
-		List<String> trauma_diseases = Arrays.asList("First Degree Burn,Second Degree Burn,Third Degree Burn,Acute Dislocation,Chronic Dislocation,First Degree Sprain,"
-				+ "Second Degree Sprain,Third Degree Sprain,Complete Fracture,Green Stem Fracture,Comminuted Fracture,Open Fracture,Mild Head Trauma,Complete Spinal Cord Injury,"
-				+ "Internal Bleeding,External Bleeding,Venous Hemorrhage,Arterial Bleeding,First Degree Bruise,Second Degree Bruise,Third Degree Bruise".split(","));
+		List<String> trauma_diseases = Arrays.asList("First Degree Burn,Second Degree Burn,Third Degree Burn,Acute Dislocation,Chronic Dislocation,First Degree Sprain,Second Degree Sprain,Third Degree Sprain,Complete Fracture,Green Stem Fracture,Comminuted Fracture,Open Fracture,Mild Head Trauma,Complete Spinal Cord Injury,Internal Bleeding,External Bleeding,Venous Hemorrhage,Arterial Bleeding,First Degree Bruise,Second Degree Bruise,Third Degree Bruise".split(","));
 		i=0; spe_id = Search_specialty_id_by_name("Traumatology");
 		
 		for (String d: trauma_diseases) {
