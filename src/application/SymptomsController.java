@@ -150,10 +150,10 @@ public class SymptomsController implements Initializable {
 			 
 		 } else if(urgency.getSpecialty().getName().equals("Other")){
 			 ksession = kc.newKieSession("othersKS");
+			 
 		 }
-			
-		
-				 
+		 
+		 
 		 ksession.insert(manager_object);
 		 ksession.insert(urgency);
 		 ksession.fireAllRules();
@@ -164,9 +164,29 @@ public class SymptomsController implements Initializable {
 		
 		Patient p = urgency.getPatient();
 		manager_object.Insert_new_patient(p.getName(), p.getSurname(), p.getGender(), p.getAge_range(), p.getChronic(), p.getDrugs(), p.getReference_number(), manager_object.Search_stored_emergency_by_code(urgency.getCode()).getId());
-		 
+				 
+		// Here we update the id correspondent to DB
+		urgency.setId(manager_object.Search_stored_emergency_by_code(urgency.getCode()).getId());
+		p.setId(manager_object.Search_stored_emergency_by_code(urgency.getCode()).getPatient().getId());
+
 		System.out.println("AFTER:\n" + urgency);
 		
+		
+		/*
+		// Here we evaluate if the emergency requires displaying transport
+		ksession = null;
+		ksession = kc.newKieSession("displayKS");
+		ksession.insert(urgency);
+		ksession.fireAllRules();
+		ksession.dispose();
+
+		manager_object.Insert_new_emergency(urgency.getCode(), urgency.getSeverity(), urgency.getDate(),urgency.getDirection(), urgency.getLocation().getId(), urgency.getSpecialty().getId(), urgency.getDisease().getId(), urgency.getProtocol().getId());
+		
+		Patient p = urgency.getPatient();
+		manager_object.Insert_new_patient(p.getName(), p.getSurname(), p.getGender(), p.getAge_range(), p.getChronic(), p.getDrugs(), p.getReference_number(), manager_object.Search_stored_emergency_by_code(urgency.getCode()).getId());
+		
+		System.out.println("DISPLAY:\n" + urgency.getLocation());
+		*/
 	 }
 	
 	

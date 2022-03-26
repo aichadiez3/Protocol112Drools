@@ -29,6 +29,10 @@
 	  <kbase name="other" packages="rules.others">
 	      <ksession name="othersKS"/>
 	  </kbase>
+	  
+	  <kbase name="display" packages="rules.vehicleDisplay">
+	      <ksession name="displayKS"/>
+	  </kbase>
     
 </kmodule>
 

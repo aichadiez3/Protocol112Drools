@@ -4,7 +4,7 @@ package rules.cardiology;
 import pojos.Emergency;
 import jdbc.SQLManager;
 
-rule "cardiology_heart_attack"
+rule "heart_attack"
 	dialect "java"
 	when
 	    dbm : SQLManager(  )
@@ -12,6 +12,75 @@ rule "cardiology_heart_attack"
 	then
 		u.setProtocol(dbm.Search_protocol_by_id(1));
 		u.setSeverity(1);
-		//System.out.println("AFTER:\n" + dbm.Search_stored_emergency_by_code(u.getCode()));
 end
+
+rule "heart_failure_severe"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Heart failure severe"))
+	then
+		u.setSeverity(3);
+		u.setProtocol(dbm.Search_protocol_by_id(20));
+		
+end
+
+rule "heart_failure_severe_light"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Heart failure light"))
+	then
+		u.setSeverity(4);
+		u.setProtocol(dbm.Search_protocol_by_id(21));
+		
+end
+
+
+rule "hipertensive_crisis"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Hipertensive crisis"))
+	then
+		u.setSeverity(3);
+		u.setProtocol(dbm.Search_protocol_by_id(22));
+		
+end
+
+
+rule "ictus"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Ictus"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(dbm.Search_protocol_by_id(23));
+		
+end
+
+rule "syncope"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Syncope") && !getPatient().getAge_range().equals("Elder"))
+	then
+		u.setSeverity(5);
+		u.setProtocol(dbm.Search_protocol_by_id(24));
+		
+end
+
+
+rule "syncope_if_Ancients"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Syncope") && getPatient().getAge_range().equals("Elder"))
+	then
+		u.setSeverity(4);
+		u.setProtocol(dbm.Search_protocol_by_id(25));
+		
+end
+
 

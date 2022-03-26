@@ -9,13 +9,129 @@ import jdbc.SQLManager;
 
 
 
-rule ""
+rule "colon_cancer_light"
 	dialect "java"
 	when
 	    dbm : SQLManager(  )
-		u : Emergency (getDisease().getName().equals(""))
+		u : Emergency (getDisease().getName().equals("Colon cancer light"))
 	then
-		u.setProtocol(dbm.Search_protocol_by_id(2));
-		u.setSeverity(5);
+		u.setProtocol(dbm.Search_protocol_by_id(5));
+		u.setSeverity(4);
 end
 
+rule "colon_cancer_severe"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Colon cancer severe"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(dbm.Search_protocol_by_id(16));
+end
+
+
+
+rule "prostate_cancer_light"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Prostate cancer light"))
+	then
+		u.setSeverity(3);
+		u.setProtocol(dbm.Search_protocol_by_id(6));
+end
+
+rule "prostate_cancer_severe"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Prostate cancer severe"))
+	then
+		u.setSeverity(2);
+		u.setProtocol(dbm.Search_protocol_by_id(16));
+		
+end
+
+
+rule "lung_cancer_light"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Lung cancer light"))
+	then
+		u.setSeverity(5);
+		u.setProtocol(dbm.Search_protocol_by_id(5));
+end
+
+rule "lung_cancer_severe"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Lung cancer severe"))
+	then
+		u.setSeverity(1);
+		u.setProtocol(dbm.Search_protocol_by_id(16));
+end
+
+rule "breast_cancer_light"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Breast cancer light"))
+	then
+		u.setSeverity(5);
+		u.setProtocol(dbm.Search_protocol_by_id(5));
+end
+
+rule "breast_cancer_severe"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Breast cancer severe") && (getPatient().getAge_range().equals("Adult") || (getPatient().getAge_range().equals("Elder"))))
+	then
+		u.setSeverity(1);
+		u.setProtocol(dbm.Search_protocol_by_id(16));
+end
+
+
+rule "breast_cancer_is_childOrYoung"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency ( ( getDisease().getName().equals("Breast cancer severe") || (getDisease().getName().equals("Breast cancer light")) )  && (getPatient().getAge_range().equals("Child") || (getPatient().getAge_range().equals("Young"))))
+	then
+		u.setSeverity(3);
+		u.setProtocol(dbm.Search_protocol_by_id(1));
+		u.getProtocol().setInfo(u.getProtocol().getInfo() + "\n\n Considerations: Low possibilities of this cancer type in young patients");
+end
+
+rule "breast_cancer_is_male"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency ( (getDisease().getName().equals("Breast cancer severe") || (getDisease().getName().equals("Breast cancer light")) ) && (getPatient().getGender().equals("Male")))
+	then
+		u.setSeverity(3);
+		u.setProtocol(dbm.Search_protocol_by_id(1));
+		u.getProtocol().setInfo(u.getProtocol().getInfo() + "\n\n Considerations: Low possibilities of this cancer type in male patients");
+end
+
+rule "leukemia_severe"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Leukemia severe") )
+	then
+		u.setSeverity(1);
+		u.setProtocol(dbm.Search_protocol_by_id(4));
+end
+
+rule "leukemia_light"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Leukemia light"))
+	then
+		u.setSeverity(4);
+		u.setProtocol(dbm.Search_protocol_by_id(5));
+end

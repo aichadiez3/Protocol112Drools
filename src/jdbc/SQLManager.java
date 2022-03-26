@@ -208,16 +208,22 @@ public class SQLManager implements Interface {
 		List<String> saver = new ArrayList<>(); 
 		
 		// --------> CARDIOLOGY
+			//HEART ATTACK
 		List<String> cardio_symps_1 = Arrays.asList("Chest pressure/Fatigue/Pain extends to the left arm/Disnea/Cold sweat/|".split("/"));
-		List<String> cardio_symps_2 = Arrays.asList("Phlegm/Swelling/Faints/Fatigue/Heart palpitations/|".split("/"));
-		List<String> cardio_symps_3 = Arrays.asList("Swelling/Faints/Fatigue/|".split("/"));
+			//HEART FAILURE
+		List<String> cardio_symps_2_1 = Arrays.asList("Swelling/Faints/Fatigue/|".split("/"));
+		List<String> cardio_symps_2_2 = Arrays.asList("Phlegm/Swelling/Faints/Fatigue/Heart palpitations/|".split("/"));
+			//HIPERTENSIVE CRISIS
+		List<String> cardio_symps_3 = Arrays.asList("Vomits/Pain/Disnea/Confusion/|".split("/"));
+			//ICTUS
 		List<String> cardio_symps_4 = Arrays.asList("Sudden numbness/Paralysis/Confusion/Difficulty speaking or undestand/Loss of vision/Loss of balance/Pain/|".split("/"));
 		List<String> cardio_symps_5 = Arrays.asList("Pale skin/Daze/Tunnel vision/Warmth sensation/Cold sweat/|".split("/"));
 
 		
 		List<String> names = new ArrayList<>();
 			names.addAll(cardio_symps_1);
-			names.addAll(cardio_symps_2);
+			names.addAll(cardio_symps_2_1);
+			names.addAll(cardio_symps_2_2);
 			names.addAll(cardio_symps_3);
 			names.addAll(cardio_symps_4);
 			names.addAll(cardio_symps_5);
@@ -235,7 +241,7 @@ public class SQLManager implements Interface {
 		
 		// Assosiate to disease
 		
-		List<String> cardio_diseases = Arrays.asList("Heart attack,Heart failure,Hipertensive crisis,Ictus,Syncope".split(","));
+		List<String> cardio_diseases = Arrays.asList("Heart attack,Heart failure light,Heart failure severe,Hipertensive crisis,Ictus,Syncope".split(","));
 		Integer i = 0, spe_id = Search_specialty_id_by_name("Cardiology");
 		
 		for (String d: cardio_diseases) {
@@ -325,9 +331,86 @@ public class SQLManager implements Interface {
 	}
 	
 	
-	}
 	
 	// ONCOLOGY
+			// ---------> COLON CANCER
+		List<String> onco_symps_1_1 = Arrays.asList("Constipation/Heart palpitations/Fever/Diarrhea/Pain/General malaise/|".split("/"));
+		List<String> onco_symps_1_2 = Arrays.asList("Constipation/Insomnia/Heart palpitations/Fever/Diarrhea/Vomits/Pain/General malaise/|".split("/"));
+			// ---------> PROSTATE CANCER
+		List<String> onco_symps_2_1 = Arrays.asList("Dysuria/Fatigue/Pain/Fluid retention/|".split("/"));
+		List<String> onco_symps_2_2 = Arrays.asList("Dysuria/Fatigue/Pain/Fluid retention/Blood in urine/|".split("/"));
+			// ---------> LUNG CANCER
+		List<String> onco_symps_3_1 = Arrays.asList("Chest pain/Fatigue/Fever/General malaise/|".split("/"));
+		List<String> onco_symps_3_2 = Arrays.asList("Chest pain/Fatigue/Fever/General malaise/Severe blood sputum/|".split("/"));
+			// ---------> BREAST CANCER	
+		List<String> onco_symps_4_1 = Arrays.asList("Pain/Breast inflamation/Nipple discharge/|".split("/"));
+		List<String> onco_symps_4_2 = Arrays.asList("Pain/Breast inflamation/Nipple discharge/Skin ulcer/|".split("/"));
+
+			// ---------> LEUKEMIA
+		List<String> onco_symps_5_1 = Arrays.asList("Fever/Pain/Fatigue/Sweating/|".split("/"));
+		List<String> onco_symps_5_2 = Arrays.asList("Fever/Severe infection/Pain/Fatigue/Sweating/|".split("/"));
+
+		names.clear();
+		names.addAll(onco_symps_1_1);
+		names.addAll(onco_symps_1_2);
+		names.addAll(onco_symps_2_1);
+		names.addAll(onco_symps_2_2);
+		names.addAll(onco_symps_3_1);
+		names.addAll(onco_symps_3_2);
+		names.addAll(onco_symps_4_1);
+		names.addAll(onco_symps_4_2);
+		names.addAll(onco_symps_5_1);
+		names.addAll(onco_symps_5_2);
+		
+		
+		List<Symptom> oncology_symp_list = new ArrayList<>();
+		m=0;
+		for(String n : names) {
+			if(m < names.size()) {
+				oncology_symp_list.add(new Symptom(m, n));
+				m++;
+			} else {
+				break;
+			}
+		}
+		
+		// Assosiate to disease
+		
+		List<String> oncology_diseases = Arrays.asList("Colon cancer light,Colon cancer severe,Prostate cancer light,Prostate cancer severe,Lung cancer light,Lung cancer severe,Breast cancer light,Breast cancer severe,Leukemia light,Leukemia severe".split(","));
+		i=0; spe_id = Search_specialty_id_by_name("Oncology");
+		
+		for (String d: oncology_diseases) {
+			Disease disease = Insert_new_disease(d, spe_id);
+			if(oncology_symp_list.get(i).toString().contains("|")) {
+				i++;
+			} 
+			
+			while(!oncology_symp_list.get(i).toString().contains("|")) {
+				saver.add(oncology_symp_list.get(i).getSymptom());
+				i++;
+			}
+			Associate_symptom_list_to_disease(saver.toString(), Search_disease_by_id(disease.getId()).getId());
+			saver.clear();
+		}
+		
+		oncology_disease_list = new ArrayList<>(List_all_diseases_by_specialty_id(spe_id));
+		
+		//Remove repetitions and associate symptoms to specialty
+		hashSet.clear();
+		hashSet = new LinkedHashSet<>(names);
+		ArrayList<String> onco_list = new ArrayList<>(hashSet);
+				        
+		for(int it = 0; it < onco_list.size(); it++) {
+			if (onco_list.get(it).equals("|")) {
+				onco_list.remove(it);
+			} else {
+				Integer index = Insert_new_symptom(onco_list.get(it));
+				Associate_symptom_to_specialty(index, Search_specialty_id_by_name("Oncology"));
+			}
+		}
+		
+		
+	
 	
 	// NEUROLOGY
 	
@@ -335,7 +418,7 @@ public class SQLManager implements Interface {
 	
 	// TRAUMATOLOGY
 	
-	
+}	
 	 // -----------------------> INSERT METHODS <---------------------------
 
 	
@@ -703,9 +786,10 @@ public class SQLManager implements Interface {
 		}
 	 
 	 public Emergency Search_stored_emergency_by_code(Integer code) {
-		Integer emergency_id=-1, level=-1, spe_id=-1, disease_id=-1, protocol_id=-1, location_id=-1;
-		String date = "", direction="";	
 			try {
+				Integer emergency_id=-1, level=-1, spe_id=-1, disease_id=-1, protocol_id=-1, location_id=-1;
+				String date = "", direction="";	
+				
 				String SQL_code2 = "SELECT * FROM emergency WHERE code = ?";
 				PreparedStatement template2 = this.sqlite_connection.prepareStatement(SQL_code2);
 				template2.setInt(1, code);
@@ -724,7 +808,7 @@ public class SQLManager implements Interface {
 			    Specialty spe = Search_specialty_by_emergency_id(emergency_id);
 			    Disease dis = Search_disease_by_id(disease_id);
 			    Location loc = Search_location_from_emergency(emergency_id);
-			    Protocol prot = Search_protocol_by_emergency_id(protocol_id);
+			    Protocol prot = Search_protocol_by_emergency_id(emergency_id);
 			    Patient patient = Search_stored_patient_by_emergency_id(emergency_id);
 				Emergency emergency = new Emergency(emergency_id, code, date, level, direction, prot, loc, spe, dis, patient);
 				template2.close();
@@ -829,9 +913,9 @@ public class SQLManager implements Interface {
 		}
 	 
 	 public Protocol Search_protocol_by_emergency_id(Integer id) {
-		 Protocol prot = null; Integer prot_id=-1;
+		 Protocol prot = null; 
 			try {
-				
+				Integer prot_id=-1;
 				String SQL_code = "SELECT protocol_id FROM emergency WHERE emergency_id = ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, id);
@@ -839,7 +923,6 @@ public class SQLManager implements Interface {
 				while (result_set.next()) {
 					prot_id = result_set.getInt("protocol_id");
 				}
-				
 				prot = Search_protocol_by_id(prot_id);
 				template.close();
 				return prot;
@@ -853,9 +936,9 @@ public class SQLManager implements Interface {
 		}
 	 
 	 public Protocol Search_protocol_by_id(Integer id) {
-		 	Protocol prot = null; String info="", type="";
-		 	
+		 	Protocol prot = null; 
 			try {
+				String info="", type="";
 				String SQL_code = "SELECT * FROM protocol WHERE protocol_id = ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, id);
@@ -984,7 +1067,7 @@ public class SQLManager implements Interface {
 		List<Emergency> list = new LinkedList<Emergency>();
 		try {
 			Statement statement = this.sqlite_connection.createStatement();
-			String SQL_code = "SELECT * FROM emergency";
+			String SQL_code = "SELECT * FROM emergency WHERE level <= 3";
 			result_set = statement.executeQuery(SQL_code);
 			while(result_set.next()) {
 				Integer id = result_set.getInt("emergency_id");
