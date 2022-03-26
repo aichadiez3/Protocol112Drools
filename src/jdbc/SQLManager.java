@@ -857,15 +857,19 @@ public class SQLManager implements Interface {
 			template1.setInt(1, patient_id);
 			result_set = template1.executeQuery();
 			Patient pat = new Patient();
-			pat.setId(patient_id);
-			pat.setName(result_set.getString("name"));
-			pat.setSurname(result_set.getString("surname"));
-			pat.setGender(result_set.getString("gender"));
-			pat.setAge_range(result_set.getString("age"));
-			pat.setChronic(result_set.getBoolean("chronic"));
-			pat.setDrugs(result_set.getBoolean("drugs"));
-			pat.setReference_number(result_set.getString("reference_number"));
-			template1.close();
+			
+			while(result_set.next()) {
+				pat.setId(patient_id);
+				pat.setName(result_set.getString("name"));
+				pat.setSurname(result_set.getString("surname"));
+				pat.setGender(result_set.getString("gender"));
+				pat.setAge_range(result_set.getString("age"));
+				pat.setChronic(result_set.getBoolean("chronic"));
+				pat.setDrugs(result_set.getBoolean("drugs"));
+				pat.setReference_number(result_set.getString("reference_number"));
+			}
+			
+			//template1.close();
 			return pat;
 		} catch (SQLException search_patient_error) {
 			search_patient_error.printStackTrace();
@@ -875,25 +879,27 @@ public class SQLManager implements Interface {
 	}
 	
 	public Patient Search_stored_patient_by_emergency_id(Integer emergency_id) {
+		ResultSet result_set1 = null; 
+		PreparedStatement template3 = null;
 		try {
 			Integer id = -1;
 			String SQL_code1 = "SELECT patient_id FROM patient WHERE emergency_id = ?";
-			PreparedStatement template3 = this.sqlite_connection.prepareStatement(SQL_code1);
+			template3 = this.sqlite_connection.prepareStatement(SQL_code1);
 			template3.setInt(1, emergency_id);
-			result_set = template3.executeQuery();
-			while(result_set.next()) {
-				id = result_set.getInt("patient_id");
+			result_set1 = template3.executeQuery();
+			while(result_set1.next()) {
+				id = result_set1.getInt("patient_id");
 			}
 			
 			Patient pat = new Patient();
 			pat = Search_stored_patient_by_id(id);
-			template3.close();
+			//template3.close();
+			
 			return pat;
 		} catch (SQLException search_patient_error) {
 			search_patient_error.printStackTrace();
 			return null;
 		}
-		
 	}
 	
 	
@@ -1125,8 +1131,6 @@ public class SQLManager implements Interface {
 				spe = Search_specialty_by_id(spe_id);
 				template.close();
 				return spe;
-				
-				
 			} catch (SQLException search_specialty_error) {
 				search_specialty_error.printStackTrace();
 				return spe;

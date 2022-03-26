@@ -161,12 +161,11 @@ public class SymptomsController implements Initializable {
 		
 		 
 		manager_object.Insert_new_emergency(urgency.getCode(), urgency.getSeverity(), urgency.getDate(),urgency.getDirection(), urgency.getLocation().getId(), urgency.getSpecialty().getId(), urgency.getDisease().getId(), urgency.getProtocol().getId());
+		urgency.setId(manager_object.Search_stored_emergency_by_code(urgency.getCode()).getId());
 		
 		Patient p = urgency.getPatient();
 		manager_object.Insert_new_patient(p.getName(), p.getSurname(), p.getGender(), p.getAge_range(), p.getChronic(), p.getDrugs(), p.getReference_number(), manager_object.Search_stored_emergency_by_code(urgency.getCode()).getId());
-				 
-		// Here we update the id correspondent to DB
-		urgency.setId(manager_object.Search_stored_emergency_by_code(urgency.getCode()).getId());
+		
 		p.setId(manager_object.Search_stored_emergency_by_code(urgency.getCode()).getPatient().getId());
 
 		System.out.println("AFTER:\n" + urgency);
