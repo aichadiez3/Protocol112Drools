@@ -12,10 +12,11 @@ public class ex {
 	public static void main(String[] args) {
 		SQLManager m = new SQLManager();
 		
-		Emergency u = m.Search_stored_emergency_by_code(249);
+		
+		Emergency u = m.Search_stored_emergency_by_code(254);
 		System.out.println(u.toString());
 		
-		
+		/*
 		KieServices ks = KieServices.Factory.get();
 		KieContainer kc = ks.getKieClasspathContainer();
 		KieSession ksession = kc.newKieSession("displayKS");
@@ -26,7 +27,10 @@ public class ex {
 		
 		System.out.println(u.toString());
 		
+		*/
 		
+		System.out.println(m.List_all_symptoms_by_disease("Heart failure light"));
+		System.out.println(m.List_all_symptoms_by_specialty_id(u.getSpecialty().getId()));
 	}
 	
 }

@@ -1251,7 +1251,7 @@ public class SQLManager implements Interface {
 	 public String Search_symptom_by_id(Integer id) {
 		 String name="";
 			try {
-				String SQL_code = "SELECT * FROM symptom WHERE symptom_id = ?";
+				String SQL_code = "SELECT name FROM symptom WHERE symptom_id = ?";
 				PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 				template.setInt(1, id);
 				result_set = template.executeQuery();
@@ -1388,9 +1388,9 @@ public class SQLManager implements Interface {
 			String SQL_code = "SELECT symptom_id FROM specialty_symptom WHERE specialty_id = ?";
 			PreparedStatement template = this.sqlite_connection.prepareStatement(SQL_code);
 			template.setInt(1, spe_id);
-			result_set = template.executeQuery();
-			while(result_set.next()) {
-				Integer id = result_set.getInt("symptom_id");
+			ResultSet rs = template.executeQuery();
+			while(rs.next()) {
+				Integer id = rs.getInt("symptom_id");
 				String name = Search_symptom_by_id(id);
 				list.add(name);
 			}

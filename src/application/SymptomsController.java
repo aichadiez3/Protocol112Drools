@@ -128,7 +128,7 @@ public class SymptomsController implements Initializable {
 	
 	 public static void execute(KieServices ks, KieContainer kc) {
 		 
-			System.out.println("BEFORE:\n" + urgency);
+			//System.out.println("BEFORE:\n" + urgency);
 			
 			KieSession ksession = null;
 		 
@@ -168,24 +168,8 @@ public class SymptomsController implements Initializable {
 		
 		p.setId(manager_object.Search_stored_emergency_by_code(urgency.getCode()).getPatient().getId());
 
-		System.out.println("AFTER:\n" + urgency);
+		//System.out.println("AFTER:\n" + urgency);
 		
-		
-		/*
-		// Here we evaluate if the emergency requires displaying transport
-		ksession = null;
-		ksession = kc.newKieSession("displayKS");
-		ksession.insert(urgency);
-		ksession.fireAllRules();
-		ksession.dispose();
-
-		manager_object.Insert_new_emergency(urgency.getCode(), urgency.getSeverity(), urgency.getDate(),urgency.getDirection(), urgency.getLocation().getId(), urgency.getSpecialty().getId(), urgency.getDisease().getId(), urgency.getProtocol().getId());
-		
-		Patient p = urgency.getPatient();
-		manager_object.Insert_new_patient(p.getName(), p.getSurname(), p.getGender(), p.getAge_range(), p.getChronic(), p.getDrugs(), p.getReference_number(), manager_object.Search_stored_emergency_by_code(urgency.getCode()).getId());
-		
-		System.out.println("DISPLAY:\n" + urgency.getLocation());
-		*/
 	 }
 	
 	
@@ -221,7 +205,7 @@ public class SymptomsController implements Initializable {
 		Integer spe_id = manager_object.Search_specialty_id_by_name(spe_name);
 		
 		List<String> symp = manager_object.List_all_symptoms_by_specialty_id(spe_id);
-		
+		System.out.println(symp);
         ObservableList<String> symptoms = delete_repetitions(symp);
 		symptomsList.setItems(symptoms);
 		
@@ -232,6 +216,8 @@ public class SymptomsController implements Initializable {
         ArrayList<String> final_list = new ArrayList<>(hashSet);
 		
         ObservableList<String> output = FXCollections.observableArrayList(final_list);
+        System.out.println(output);
+        
 		return output;
 	}
 
