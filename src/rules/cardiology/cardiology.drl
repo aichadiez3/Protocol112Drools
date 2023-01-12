@@ -18,9 +18,20 @@ rule "heart_failure_severe"
 	dialect "java"
 	when
 		dbm : SQLManager(  )
-		u : Emergency (getDisease().getName().equals("Heart failure severe"))
+			u : Emergency (getDisease().getName().equals("Heart failure severe") && !getPatient().getAge_range().equals("Elder"))
 	then
 		u.setSeverity(3);
+		u.setProtocol(dbm.Search_protocol_by_id(20));
+		
+end
+
+rule "heart_failure_Elder"
+	dialect "java"
+	when
+		dbm : SQLManager(  )
+		u : Emergency (getDisease().getName().equals("Heart failure severe") && getPatient().getAge_range().equals("Elder"))
+	then
+		u.setSeverity(2);
 		u.setProtocol(dbm.Search_protocol_by_id(20));
 		
 end
@@ -82,5 +93,9 @@ rule "syncope_if_Ancients"
 		u.setProtocol(dbm.Search_protocol_by_id(25));
 		
 end
+
+
+
+
 
 

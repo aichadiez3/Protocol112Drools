@@ -98,7 +98,7 @@ public class SQLManager implements Interface {
 			
 			Statement statement_5 = this.sqlite_connection.createStatement();
 			String table_5 = " CREATE TABLE patient " + "(patient_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-			        + " name TEXT NOT NULL UNIQUE, " + " surname TEXT NOT NULL, " + " gender TEXT default NULL, " 
+			        + " name TEXT NOT NULL, " + " surname TEXT NOT NULL, " + " gender TEXT default NULL, " 
 					+ " age TEXT NOT NULL, " + "chronic BIT default NULL, "
 			        + " drugs BIT default NULL, " + " reference_number TEXT NOT NULL,"
 			        + " emergency_id INTEGER FOREING KEY REFERENCES emergency(emergency_id) ON DELETE CASCADE)";
@@ -187,6 +187,7 @@ public class SQLManager implements Interface {
 		Insert_new_protocol("Head elevation + ECG + Tension measure + Neuroprotector drugs","SHIPMENT");// ictus
 		Insert_new_protocol("Leg lift + Hydration","ADVICE");// syncope
 		Insert_new_protocol("Leg lift + Hydration + ECG + Recommend to make appointment with doctor for further evaluation","INPLACE"); // syncope old people
+		
 		//TRAUMA3
 		Insert_new_protocol("Apply cold to the affected zone + ointment if needed + and avoid infecttions","ADVICE");
 		Insert_new_protocol("Do not move the limb + clean and cover wounds + cold +repositioning the bone by experts + anti-inflammatories","ADVICE");
@@ -213,6 +214,7 @@ public class SQLManager implements Interface {
 			//HEART FAILURE
 		List<String> cardio_symps_2_1 = Arrays.asList("Swelling/Faints/Fatigue/|".split("/"));
 		List<String> cardio_symps_2_2 = Arrays.asList("Phlegm/Swelling/Faints/Fatigue/Heart palpitations/|".split("/"));
+		List<String> cardio_symps_2_3 = Arrays.asList("Phlegm/Swelling/Faints/Fatigue/Heart palpitations/Nervous|".split("/"));
 			//HIPERTENSIVE CRISIS
 		List<String> cardio_symps_3 = Arrays.asList("Vomits/Pain/Disnea/Confusion/|".split("/"));
 			//ICTUS
@@ -224,6 +226,7 @@ public class SQLManager implements Interface {
 			names.addAll(cardio_symps_1);
 			names.addAll(cardio_symps_2_1);
 			names.addAll(cardio_symps_2_2);
+			names.addAll(cardio_symps_2_3);
 			names.addAll(cardio_symps_3);
 			names.addAll(cardio_symps_4);
 			names.addAll(cardio_symps_5);
